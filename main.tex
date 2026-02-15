@@ -1,0 +1,120 @@
+\documentclass[9pt]{beamer}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+\setbeamertemplate{navigation symbols}{}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{makecell}
+\usepackage{array}
+% Fix black shadow artifacts in some PDF renderers
+\setbeamertemplate{blocks}[rounded][shadow=false]
+
+% TikZ (used in agent section diagram)
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric, shapes.misc}
+
+\title{Evaluation in the Age of Intelligent Systems}
+\subtitle{From Software Engineering to Agentic AI}
+\author{Filippo Lentoni}
+\institute{Sr Applied Scientist, Amazon \\ Columbia University}
+\date{}
+
+\begin{document}
+
+% ---------------- Slide 1 ----------------
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% ---------------- Slide 2 (Agenda) ----------------
+\begin{frame}{Agenda}
+  \tableofcontents
+\end{frame}
+
+% ---------------- Slide 3 (Merged: motivation + thesis) ----------------
+\section{Motivation \& framing}
+
+\begin{frame}{Why evaluation gets harder (and why agents force the issue)}
+\begin{itemize}
+  \item Modern AI systems fail in more ways than ``wrong output''
+  \item Each layer adds uncertainty and expands what must be evaluated
+  \item Agents force evaluation to become \textbf{continuous} (not a pre-launch checkbox)
+\end{itemize}
+
+\vspace{0.5em}
+\begin{block}{Core thesis: evaluation complexity compounds}
+Uncertainty shifts over time:
+\begin{center}
+\textbf{Inputs} $\rightarrow$ \textbf{Learned parameters} $\rightarrow$ \textbf{Token trajectories} $\rightarrow$ \textbf{System behavior \& feedback loops}
+\end{center}
+Each step \textbf{builds on} the previous layer: you keep the old evaluation problems and add new ones.
+\end{block}
+\end{frame}
+
+% ---------------- Slide 4 ----------------
+\begin{frame}{What are we evaluating, really?}
+\begin{block}{Definition}
+Evaluation = measuring the gap between intended behavior and observed behavior under uncertainty.
+\end{block}
+\begin{itemize}
+  \item Object: output, prediction, completion, trajectory, or workflow outcome
+  \item Constraints: latency, cost, safety, format, coverage, adoption
+  \item Evidence: tests, datasets, human labels, traces, dashboards
+\end{itemize}
+\end{frame}
+
+% ---- Sections (modular) ----
+\input{sections/software.tex}
+\input{sections/ml.tex}
+\input{sections/llm.tex}
+\input{sections/agent.tex}
+
+\end{document}
+
+
+
+
+% \documentclass{beamer}
+
+% % Theme and color settings
+% \usetheme{Madrid}
+% \usecolortheme{default}
+
+% % Packages
+% \usepackage{graphicx}
+% \usepackage{hyperref}
+% \usepackage{amsmath}
+% \usepackage{listings}
+% \usepackage{xcolor}
+
+% % Metadata
+% \title{My Presentation Title}
+% \subtitle{Organized with Sections}
+% \author{Your Name}
+% \institute{Your Institution}
+% \date{\today}
+
+% % Custom commands (optional)
+% \newcommand{\todo}[1]{\textcolor{red}{\textbf{TODO: #1}}}
+
+% \begin{document}
+
+% % Title page
+% \frame{\titlepage}
+
+% % Table of contents
+% \begin{frame}{Outline}
+% \tableofcontents
+% \end{frame}
+
+% % Include section files
+% \input{sections/introduction.tex}
+% \input{sections/methodology.tex}
+% \input{sections/results.tex}
+% \input{sections/conclusion.tex}
+
+% \end{document}
