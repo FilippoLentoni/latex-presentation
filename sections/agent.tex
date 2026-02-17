@@ -134,7 +134,7 @@ Find the \textbf{simplest and cheapest} combination of agents that solves your p
 \end{enumerate}
 
 \begin{block}{Key Insight}
-Single accuracy metric is insufficient. Need \textbf{multi-dimensional evaluation} covering the full agent lifecycle.
+A single accuracy metric is insufficient. We need \textbf{multi-dimensional evaluation} covering the full agent lifecycle.
 \end{block}
 \end{frame}
 
@@ -183,7 +183,7 @@ Never interpret adoption in isolation---declining adoption signals coverage or q
 \addlinespace
 \textbf{Latency} & Time from query to complete response & Time to first token, total time, \# of turns \\
 \addlinespace
-\textbf{Accuracy} & Correctness, completeness, and safety of responses & Via Accuracy Bridge taxonomy \\
+\textbf{Accuracy} & Correctness, completeness, and safety of responses & Using the Accuracy Bridge taxonomy \\
 \addlinespace
 \textbf{Cost} & Resource consumption per query & \$/query, tokens used, API calls, compute \\
 \bottomrule
@@ -223,7 +223,7 @@ Improving accuracy may increase latency and cost. Optimizing cost may reduce acc
 \end{enumerate}
 
 \begin{block}{Key Insight}
-Refusing gracefully is a \textbf{correct behavior}---test for it explicitly.
+Graceful refusal is \textbf{correct behavior}---test for it explicitly.
 \end{block}
 \end{frame}
 
@@ -262,7 +262,7 @@ Define latency thresholds \textbf{per task type} in your evaluation criteria.
 % ---------------- Slide: Accuracy Bridge Intro ----------------
 \begin{frame}{Accuracy: Beyond a Single Number}
 
-\textbf{Problem:} ``The agent was 85\% accurate'' doesn't enable improvement.
+\textbf{Challenge:} ``The agent was 85\% accurate'' doesn't enable improvement.
 
 \begin{block}{The Accuracy Bridge}
 A standardized taxonomy that decomposes inaccuracies into:
@@ -638,6 +638,157 @@ LLM-as-a-Judge must be \textbf{calibrated} against human-labeled data. Human lab
 \begin{block}{Golden Rule}
 Never fully automate evaluation with LLM-as-a-Judge without ongoing human validation.
 \end{block}
+\end{frame}
+
+% ---------------- Slide: Judge Example 1 (No Ground Truth) ----------------
+\begin{frame}[fragile]{LLM-as-a-Judge Example: Hallucination Detection (No Ground Truth)}
+
+\scriptsize
+\textbf{Use Case:} When ground truth is unavailable, judge evaluates plausibility and factual consistency.
+
+\vspace{0.3em}
+\begin{block}{Judge Prompt}
+\tiny
+\texttt{Evaluate the degree of hallucination in the generation on a continuous scale from 0 to 1.}
+
+\texttt{A generation can be considered to hallucinate (Score: 1) if it does not align with established}
+\texttt{knowledge, verifiable data, or logical inference, and often includes elements that are}
+\texttt{implausible, misleading, or entirely fictional.}
+
+\vspace{0.2em}
+\textbf{Example:}
+\begin{itemize}
+  \item Query: \textit{Can eating carrots improve your vision?}
+  \item Generation: \textit{Yes, eating carrots significantly improves your vision, especially at night...}
+  \item Score: 1.0
+  \item Reasoning: \textit{Carrots only improve vision under specific circumstances (vitamin A deficiency).}
+\end{itemize}
+
+\vspace{0.2em}
+\textbf{Input Template:}
+\texttt{Query: \{\{query\}\} | Generation: \{\{generation\}\} | Think step by step.}
+\end{block}
+
+\begin{block}{Key Insight}
+Without ground truth, the judge relies on world knowledge and logical consistency.
+\end{block}
+\end{frame}
+
+% ---------------- Slide: Judge Example 2 (With Ground Truth) ----------------
+\begin{frame}[fragile]{LLM-as-a-Judge Example: Correctness Evaluation (With Ground Truth)}
+
+\scriptsize
+\textbf{Use Case:} When ground truth is available, judge compares generation against reference answer.
+
+\vspace{0.3em}
+\begin{block}{Judge Prompt}
+\tiny
+\texttt{Evaluate the correctness of the generation on a continuous scale from 0 to 1.}
+
+\texttt{A generation can be considered correct (Score: 1) if it includes all the key facts from the}
+\texttt{ground truth and if every fact presented is factually supported by the ground truth or common sense.}
+
+\vspace{0.2em}
+\textbf{Example:}
+\begin{itemize}
+  \item Query: \textit{Can eating carrots improve your vision?}
+  \item Generation: \textit{Yes, eating carrots significantly improves your vision...} (same as before)
+  \item Ground Truth: \textit{Carrots contain beta-carotene (vitamin A). Extreme lack causes blindness.}
+  \item Score: 0.1
+  \item Reasoning: \textit{Generation mentions vision improvement but fails to explain the mechanism or circumstances. Contains misinformation and exaggerations.}
+\end{itemize}
+
+\vspace{0.2em}
+\textbf{Input Template:}
+\texttt{Query: \{\{query\}\} | Generation: \{\{generation\}\} | Ground truth: \{\{ground\_truth\}\}}
+\end{block}
+
+\begin{block}{Key Insight}
+With ground truth, scoring is more objective and can catch subtle omissions or additions.
+\end{block}
+\end{frame}
+
+% ---------------- Slide: Langfuse HLD ----------------
+\begin{frame}{Production Agent Evaluation: A Two-Phase System}
+
+\scriptsize
+
+\begin{center}
+\begin{tikzpicture}[
+  node distance=0.6cm,
+  phase/.style={rectangle, draw, thick, rounded corners, minimum width=2.5cm, minimum height=2.2cm, font=\scriptsize, align=center, fill=blue!5},
+  langfuse/.style={rectangle, draw, thick, rounded corners, minimum width=1.8cm, minimum height=2.5cm, font=\tiny, align=left, fill=orange!10},
+  arrow/.style={->, thick}
+]
+
+% Phase 1: Offline (Beta)
+\node[phase] (beta) at (0,0) {
+  \textbf{Phase 1}\\
+  \textbf{Offline}\\[0.15cm]
+  \tiny
+  • Iterate\\
+  • Eval dataset\\
+  • Judge scores\\
+  • Gate
+};
+
+% Langfuse in the center
+\node[langfuse] (langfuse) at (3.5,0) {
+  \textbf{Langfuse}\\[0.05cm]
+  \tiny
+  Traces\\
+  Scores\\
+  Datasets\\
+  Annotations\\
+  Prompts\\
+  Evaluators
+};
+
+% Phase 2: Online (Prod)
+\node[phase] (prod) at (7,0) {
+  \textbf{Phase 2}\\
+  \textbf{Online}\\[0.15cm]
+  \tiny
+  • Real users\\
+  • Monitor\\
+  • Feedback\\
+  • Review
+};
+
+% Arrows
+\draw[arrow] (beta.east) -- (langfuse.west);
+\draw[arrow] (langfuse.east) -- (prod.west);
+\draw[arrow, bend left=35] (beta.north) to node[above, font=\tiny] {promote} (prod.north);
+\draw[arrow, bend left=35] (prod.south) to node[below, font=\tiny] {feedback} (beta.south);
+
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.4em}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\textbf{Offline (Beta):}
+\begin{itemize}
+  \item Experiment on eval datasets
+  \item LLM-as-a-Judge automated scoring
+  \item Accuracy gate before promotion
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\textbf{Online (Production):}
+\begin{itemize}
+  \item Continuous trace monitoring
+  \item User feedback collection
+  \item Weekly human review
+\end{itemize}
+\end{column}
+\end{columns}
+
+\vspace{0.3em}
+\begin{block}{Key Insight}
+Production failures feed back into the evaluation dataset, creating continuous improvement.
+\end{block}
+
 \end{frame}
 
 % ---------------- Slide: Sampling Strategies ----------------

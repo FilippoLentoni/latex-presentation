@@ -106,7 +106,7 @@ Each prompt version is a ``model'' that must be evaluated systematically.
 % ---------------- Slide: Abstention ----------------
 \begin{frame}{Abstention: Trading Coverage for Accuracy}
 
-\textbf{Problem:} LLMs have a bias toward producing answers even when uncertain.
+\textbf{Problem:} LLMs tend to produce answers even when uncertain.
 
 \begin{block}{Abstention Prompting (``Unable to Classify'')}
 Explicitly instruct the model to decline when information is insufficient:
@@ -147,8 +147,8 @@ Use abstention when the \textbf{cost of a wrong answer} exceeds the \textbf{cost
 
 \begin{block}{The Problem}
 \begin{itemize}
-  \item Developer iterates prompt on a fixed set of examples
-  \item Prompt becomes highly tuned to those specific cases
+  \item Developers iterate on prompts using a fixed set of examples
+  \item Prompts become highly tuned to those specific cases
   \item Performance degrades on unseen production data
 \end{itemize}
 \end{block}
@@ -315,7 +315,7 @@ With abstention: lower coverage $\leftrightarrow$ higher precision on classified
 
 \begin{block}{UAT Design Principles}
 \begin{enumerate}
-  \item \textbf{Stratified Sampling}: Ensure representation across categories
+  \item \textbf{Stratified Sampling}: Ensures representation across categories
   \begin{itemize}
     \item Especially important when class distribution is skewed
     \item Sample proportionally or oversample rare classes
@@ -364,7 +364,7 @@ Always report \textbf{why} coverage isn't 100\% -- separates model limitations f
 % ---------------- Slide: Explainability ----------------
 \begin{frame}{Explainability-Driven Feedback Loop}
 
-\textbf{Advantage of LLMs:} Native chain-of-thought reasoning provides explainability.
+\textbf{Key Advantage of LLMs:} Native chain-of-thought reasoning provides explainability.
 
 \begin{block}{Benefits of Explainability}
 \begin{enumerate}
