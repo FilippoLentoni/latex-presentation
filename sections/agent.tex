@@ -54,17 +54,13 @@ An \textbf{agent} is a system that uses an LLM as its reasoning engine to:
 
 \textbf{Core Components:}
 \begin{itemize}
-  \item \textbf{Planner/Orchestrator}: Decides what to do next (LLM-based)
+  \item \textbf{Brain}: The LLM
   \item \textbf{Tools}: External capabilities (APIs, databases, code execution)
   \item \textbf{Memory}: Context persistence across interactions
   \item \textbf{Guardrails}: Safety and policy constraints
 \end{itemize}
 
-\begin{block}{Agent Loop (Simplified)}
-\texttt{Observe} $\rightarrow$ \texttt{Think} $\rightarrow$ \texttt{Act} $\rightarrow$ \texttt{Observe} $\rightarrow$ ...
-\end{block}
 \end{frame}
-
 % ---------------- Slide: Examples of Agents ----------------
 \begin{frame}{Examples of Agentic Applications}
 
@@ -75,15 +71,15 @@ An \textbf{agent} is a system that uses an LLM as its reasoning engine to:
 \midrule
 Data Analysis Agent & Query databases, generate reports, create visualizations & Query correctness, data grounding \\
 \addlinespace
-Explainability Agent & Analyze code/models, explain inputs/outputs & Reasoning accuracy \\
-\addlinespace
+% Explainability Agent & Analyze code/models, explain inputs/outputs & Reasoning accuracy \\
+% \addlinespace
 Document Intelligence & Extract, summarize, answer questions from documents & Extraction completeness, citation accuracy \\
 \addlinespace
 Coding Agent & Generate, review, debug, and execute code & Functional correctness, security \\
 \addlinespace
-Orchestrator Agent & Coordinate multiple sub-agents & Action sequencing, delegation accuracy \\
-\addlinespace
-Research Agent & Search, synthesize, and summarize information & Source quality, hallucination rate \\
+% Orchestrator Agent & Coordinate multiple sub-agents & Action sequencing, delegation accuracy \\
+% \addlinespace
+% Research Agent & Search, synthesize, and summarize information & Source quality, hallucination rate \\
 \bottomrule
 \end{tabular}
 
@@ -103,15 +99,13 @@ Model per Agent & Which LLM for each sub-task & Cost/performance balance \\
 Agent Prompts & System instructions per agent & Task accuracy \\
 \addlinespace
 Tools / MCP & Available actions, APIs, data sources & Capability coverage \\
-\addlinespace
-Orchestration Logic & When to call which agent/tool & Efficiency, correctness \\
 \bottomrule
 \end{tabular}
 
-\vspace{0.5em}
-\begin{block}{Design Principle}
-Find the \textbf{simplest and cheapest} combination of agents that solves your problem. More agents $\neq$ better.
-\end{block}
+% \vspace{0.5em}
+% \begin{block}{Design Principle}
+% Find the \textbf{simplest and cheapest} combination of agents that solves your problem. More agents $\neq$ better.
+% \end{block}
 \end{frame}
 
 % ---------------- Slide: Why Agent Eval is Hard ----------------
@@ -128,49 +122,17 @@ Find the \textbf{simplest and cheapest} combination of agents that solves your p
   
   \item \textbf{Non-determinism}: Same query can take different paths
   
-  \item \textbf{Partial success}: Agent may complete 4/5 steps correctly
-  
   \item \textbf{Side effects}: Actions may change external state (databases, APIs)
 \end{enumerate}
-
-\begin{block}{Key Insight}
-A single accuracy metric is insufficient. We need \textbf{multi-dimensional evaluation} covering the full agent lifecycle.
-\end{block}
 \end{frame}
 
 % ---------------- Slide: Metrics Taxonomy Overview ----------------
 \begin{frame}{AI Metrics Taxonomy for Agents}
 
-% Diagram placeholder - tikzpicture left empty intentionally
-% \begin{center}
-% \begin{tikzpicture}[
-%   node distance=0.8cm,
-%   box/.style={draw, rounded corners, minimum width=2cm, minimum height=0.6cm, font=\small}
-% ]
-% % Diagram content would go here
-% \end{tikzpicture}
-% \end{center}
-
 \textbf{Hierarchical Relationship:}
 $$
 \text{Adoption} \xleftarrow{\text{depends on}} \text{Coverage} \xleftarrow{\text{within scope}} \begin{cases} \text{Accuracy} \\ \text{Latency} \\ \text{Cost} \end{cases}
 $$
-
-\begin{block}{Interpretation}
-\begin{itemize}
-  \item \textbf{Adoption} is the \textit{outcome} metric (downstream of quality)
-  \item \textbf{Coverage} defines what the agent \textit{can} answer
-  \item Within coverage, optimize for \textbf{Accuracy}, \textbf{Latency}, and \textbf{Cost}
-\end{itemize}
-\end{block}
-
-\begin{block}{Warning}
-Never interpret adoption in isolation---declining adoption signals coverage or quality issues.
-\end{block}
-\end{frame}
-
-% ---------------- Slide: Metrics Definitions ----------------
-\begin{frame}{Agent Metrics: Definitions}
 
 \small
 \begin{tabular}{p{2cm}p{5cm}p{3.2cm}}
@@ -196,94 +158,94 @@ Improving accuracy may increase latency and cost. Optimizing cost may reduce acc
 \end{frame}
 
 % ---------------- Slide: Coverage Deep Dive ----------------
-\begin{frame}{Coverage: Defining Agent Scope}
+% \begin{frame}{Coverage: Defining Agent Scope}
 
-\textbf{Coverage} = the spectrum of queries the agent is designed to handle.
+% \textbf{Coverage} = the spectrum of queries the agent is designed to handle.
 
-\begin{block}{Expected Behaviors}
-\begin{itemize}
-  \item \textbf{In-scope query}: Agent should provide accurate, complete response
-  \item \textbf{Out-of-scope query}: Agent should \textit{explicitly refuse}
-  \begin{itemize}
-    \item ``I'm not able to answer this question.''
-    \item ``This is outside my capabilities. Please contact [X].''
-  \end{itemize}
-\end{itemize}
-\end{block}
+% \begin{block}{Expected Behaviors}
+% \begin{itemize}
+%   \item \textbf{In-scope query}: Agent should provide accurate, complete response
+%   \item \textbf{Out-of-scope query}: Agent should \textit{explicitly refuse}
+%   \begin{itemize}
+%     \item ``I'm not able to answer this question.''
+%     \item ``This is outside my capabilities. Please contact [X].''
+%   \end{itemize}
+% \end{itemize}
+% \end{block}
 
-\textbf{Coverage Analysis:}
-\begin{enumerate}
-  \item Log all user queries (in-scope and out-of-scope)
-  \item Analyze out-of-scope queries to distinguish:
-  \begin{itemize}
-    \item True misuse (user asking wrong agent)
-    \item Capability gap (should be in scope, but isn't)
-  \end{itemize}
-  \item Use gaps to inform roadmap and expand evaluation dataset
-\end{enumerate}
+% \textbf{Coverage Analysis:}
+% \begin{enumerate}
+%   \item Log all user queries (in-scope and out-of-scope)
+%   \item Analyze out-of-scope queries to distinguish:
+%   \begin{itemize}
+%     \item True misuse (user asking wrong agent)
+%     \item Capability gap (should be in scope, but isn't)
+%   \end{itemize}
+%   \item Use gaps to inform roadmap and expand evaluation dataset
+% \end{enumerate}
 
-\begin{block}{Key Insight}
-Graceful refusal is \textbf{correct behavior}---test for it explicitly.
-\end{block}
-\end{frame}
+% \begin{block}{Key Insight}
+% Graceful refusal is \textbf{correct behavior}---test for it explicitly.
+% \end{block}
+% \end{frame}
 
 % ---------------- Slide: Latency Deep Dive ----------------
-\begin{frame}{Latency: Breaking Down Response Time}
+% \begin{frame}{Latency: Breaking Down Response Time}
 
-\textbf{Latency} can be decomposed into multiple components:
+% \textbf{Latency} can be decomposed into multiple components:
 
-\begin{center}
-\small
-\begin{tabular}{p{3.5cm}p{6.5cm}}
-\toprule
-\textbf{Component} & \textbf{Definition} \\
-\midrule
-Time to First Token (TTFT) & Time until agent starts responding \\
-Total Response Time & Time from query to complete response \\
-Per-Tool Latency & Time spent in each tool invocation \\
-Number of Turns & Conversation rounds to reach answer \\
-Planning Time & Time spent in reasoning/orchestration \\
-\bottomrule
-\end{tabular}
-\end{center}
+% \begin{center}
+% \small
+% \begin{tabular}{p{3.5cm}p{6.5cm}}
+% \toprule
+% \textbf{Component} & \textbf{Definition} \\
+% \midrule
+% Time to First Token (TTFT) & Time until agent starts responding \\
+% Total Response Time & Time from query to complete response \\
+% Per-Tool Latency & Time spent in each tool invocation \\
+% Number of Turns & Conversation rounds to reach answer \\
+% Planning Time & Time spent in reasoning/orchestration \\
+% \bottomrule
+% \end{tabular}
+% \end{center}
 
-\begin{block}{Context-Dependent Thresholds}
-Acceptable latency depends on use case:
-\begin{itemize}
-  \item Interactive chat: $<5$ seconds expected
-  \item Complex analysis: Minutes may be acceptable
-  \item Background task: Hours may be fine
-\end{itemize}
-\end{block}
+% \begin{block}{Context-Dependent Thresholds}
+% Acceptable latency depends on use case:
+% \begin{itemize}
+%   \item Interactive chat: $<5$ seconds expected
+%   \item Complex analysis: Minutes may be acceptable
+%   \item Background task: Hours may be fine
+% \end{itemize}
+% \end{block}
 
-Define latency thresholds \textbf{per task type} in your evaluation criteria.
-\end{frame}
+% Define latency thresholds \textbf{per task type} in your evaluation criteria.
+% \end{frame}
 
 % ---------------- Slide: Accuracy Bridge Intro ----------------
-\begin{frame}{Accuracy: Beyond a Single Number}
+% \begin{frame}{Accuracy: Beyond a Single Number}
 
-\textbf{Challenge:} ``The agent was 85\% accurate'' doesn't enable improvement.
+% \textbf{Challenge:} ``The agent was 85\% accurate'' doesn't enable improvement.
 
-\begin{block}{The Accuracy Bridge}
-A standardized taxonomy that decomposes inaccuracies into:
-\begin{enumerate}
-  \item \textbf{Failure Type}: What went wrong (user-visible outcome)
-  \item \textbf{Root Cause}: Why it went wrong (technical origin)
-  \item \textbf{Example}: Concrete illustration
-\end{enumerate}
-\end{block}
+% \begin{block}{The Accuracy Bridge}
+% A standardized taxonomy that decomposes inaccuracies into:
+% \begin{enumerate}
+%   \item \textbf{Failure Type}: What went wrong (user-visible outcome)
+%   \item \textbf{Root Cause}: Why it went wrong (technical origin)
+%   \item \textbf{Example}: Concrete illustration
+% \end{enumerate}
+% \end{block}
 
-\textbf{Benefits:}
-\begin{itemize}
-  \item \textbf{Actionable}: Links failure type to fix (prompting? tools? retrieval?)
-  \item \textbf{Comparable}: Same taxonomy across different agents
-  \item \textbf{Trackable}: Monitor if fixes reduce specific failure types over time
-  \item \textbf{Reportable}: Aggregated view for stakeholders
-\end{itemize}
-\end{frame}
+% \textbf{Benefits:}
+% \begin{itemize}
+%   \item \textbf{Actionable}: Links failure type to fix (prompting? tools? retrieval?)
+%   \item \textbf{Comparable}: Same taxonomy across different agents
+%   \item \textbf{Trackable}: Monitor if fixes reduce specific failure types over time
+%   \item \textbf{Reportable}: Aggregated view for stakeholders
+% \end{itemize}
+% \end{frame}
 
 % ---------------- Slide: Accuracy Bridge Table 1 ----------------
-\begin{frame}{The Accuracy Bridge: Failure Taxonomy (1/2)}
+\begin{frame}{The Accuracy Bridge: Failure Taxonomy}
 
 \scriptsize
 \begin{tabular}{p{1.8cm}p{3cm}p{2.8cm}p{2.8cm}}
@@ -292,7 +254,7 @@ A standardized taxonomy that decomposes inaccuracies into:
 \midrule
 \textbf{Hallucination} (Factually Wrong) & Information that is incorrect or not grounded in source data & Prompting, Retrieval, Tool error, Model limitation, Data quality & Agent returns incorrect value for a metric \\
 \addlinespace
-\textbf{Incomplete} & Response omits critical information required to answer & Prompting, Orchestration, Retrieval, Model limitation & Agent explains variance but omits primary driver \\
+\textbf{Incomplete} & Response omits critical information required to answer & Prompting, Orchestration, Retrieval, Model limitation & missing root causes  \\
 \addlinespace
 \textbf{Extra Information} & Includes unrequested, irrelevant information & Prompting, Model limitation & Agent adds unrelated suggestions to a factual query \\
 \addlinespace
@@ -302,7 +264,7 @@ A standardized taxonomy that decomposes inaccuracies into:
 \end{frame}
 
 % ---------------- Slide: Accuracy Bridge Table 2 ----------------
-\begin{frame}{The Accuracy Bridge: Failure Taxonomy (2/2)}
+\begin{frame}{The Accuracy Bridge: Failure Taxonomy}
 
 \scriptsize
 \begin{tabular}{p{1.8cm}p{3cm}p{2.8cm}p{2.8cm}}
@@ -317,129 +279,51 @@ A standardized taxonomy that decomposes inaccuracies into:
 \bottomrule
 \end{tabular}
 
-\vspace{0.5em}
-\begin{block}{Using the Accuracy Bridge}
-When labeling an inaccurate response:
-\begin{enumerate}
-  \item Assign exactly one \textbf{failure type}
-  \item Identify the most likely \textbf{root cause}
-  \item This enables targeted fixes and trend analysis
-\end{enumerate}
-\end{block}
-\end{frame}
-
-% ---------------- Slide: Root Cause Mapping ----------------
-\begin{frame}{Root Cause $\rightarrow$ Remediation Mapping}
-
-\begin{center}
-\small
-\begin{tabular}{p{3cm}p{7cm}}
-\toprule
-\textbf{Root Cause} & \textbf{Typical Remediation} \\
-\midrule
-\textbf{Prompting} & Refine system prompt, add examples, improve instructions \\
-\addlinespace
-\textbf{Retrieval (RAG)} & Improve chunking, embedding model, retrieval strategy \\
-\addlinespace
-\textbf{Tool Configuration} & Fix tool parameters, add validation, improve tool descriptions \\
-\addlinespace
-\textbf{Orchestration Logic} & Adjust agent routing, improve planning prompts \\
-\addlinespace
-\textbf{Missing Guardrails} & Add input/output validation, safety filters \\
-\addlinespace
-\textbf{Model Limitation} & Try different model, add reasoning steps, decompose task \\
-\addlinespace
-\textbf{Data Quality} & Fix upstream data, add data validation \\
-\addlinespace
-\textbf{Infrastructure} & Increase limits, add retries, optimize for latency \\
-\bottomrule
-\end{tabular}
-\end{center}
-
 \begin{block}{Feedback Loop}
 Accuracy Bridge $\rightarrow$ Root Cause Analysis $\rightarrow$ Targeted Fix $\rightarrow$ Re-evaluate
 \end{block}
 \end{frame}
 
 % ---------------- Slide: Offline vs Online ----------------
-\begin{frame}{Two Evaluation Modes: Offline and Online}
+% \begin{frame}{Two Evaluation Modes: Offline and Online}
 
-\begin{columns}[T]
-\begin{column}{0.48\textwidth}
-\textbf{Offline Evaluation}\\
-(Pre-Deployment)
-\begin{itemize}
-  \item Run agent against curated dataset
-  \item Ground truth available
-  \item Controlled environment
-  \item Gate for deployment
-  \item Catch issues \textit{before} users see them
-\end{itemize}
-\end{column}
-\begin{column}{0.48\textwidth}
-\textbf{Online Evaluation}\\
-(Post-Deployment)
-\begin{itemize}
-  \item Monitor production traffic
-  \item Ground truth often unavailable
-  \item Real user behavior
-  \item Continuous monitoring
-  \item Catch issues \textit{in the wild}
-\end{itemize}
-\end{column}
-\end{columns}
+% \begin{columns}[T]
+% \begin{column}{0.48\textwidth}
+% \textbf{Offline Evaluation}\\
+% (Pre-Deployment)
+% \begin{itemize}
+%   \item Run agent against curated dataset
+%   \item Ground truth available
+%   \item Controlled environment
+%   \item Gate for deployment
+% \end{itemize}
+% \end{column}
+% \begin{column}{0.48\textwidth}
+% \textbf{Online Evaluation}\\
+% (Post-Deployment)
+% \begin{itemize}
+%   \item Monitor production traffic
+%   \item Ground truth often unavailable
+%   \item Real user behavior
+%   \item Continuous monitoring
+% \end{itemize}
+% \end{column}
+% \end{columns}
 
-\vspace{0.5em}
-\begin{block}{Both Are Required}
-\begin{itemize}
-  \item Offline: Necessary but not sufficient (can't anticipate all real queries)
-  \item Online: Catches drift, edge cases, and unexpected user behavior
-\end{itemize}
-\end{block}
-\end{frame}
-
-% ---------------- Slide: Offline Workflow ----------------
-\begin{frame}{Offline Evaluation Workflow}
-
-\textbf{Step-by-Step Process:}
-
-\begin{enumerate}
-  \item \textbf{Create Evaluation Dataset}
-  \begin{itemize}
-    \item Representative of expected production queries
-    \item Include edge cases and adversarial examples
-    \item Include out-of-scope queries (refusal = correct)
-    \item Ground truth labels from domain experts (SMEs)
-  \end{itemize}
-  
-  \item \textbf{Run Agent Against Dataset}
-  \begin{itemize}
-    \item Execute full agent pipeline (tools, reasoning, output)
-    \item Capture all traces: prompts, tool calls, intermediate steps
-  \end{itemize}
-  
-  \item \textbf{Evaluate and Label}
-  \begin{itemize}
-    \item Compute metrics (coverage, accuracy, latency, cost)
-    \item Label failures using Accuracy Bridge
-  \end{itemize}
-  
-  \item \textbf{Decision Gate}
-  \begin{itemize}
-    \item Meets quality bar? $\rightarrow$ Deploy
-    \item Below bar? $\rightarrow$ Iterate (prompts, tools, architecture)
-  \end{itemize}
-\end{enumerate}
-\end{frame}
+% \vspace{0.5em}
+% \begin{block}{Both Are Required}
+% \begin{itemize}
+%   \item Offline: Necessary but not sufficient (can't anticipate all real queries)
+%   \item Online: Catches drift, edge cases, and unexpected user behavior
+% \end{itemize}
+% \end{block}
+% \end{frame}
 
 % ---------------- Slide: Building Eval Dataset ----------------
 \begin{frame}{Building a High-Quality Evaluation Dataset}
 
 \textbf{Best Practices:}
 
-\begin{columns}[T]
-\begin{column}{0.48\textwidth}
-\textbf{Do:}
 \begin{itemize}
   \item[\checkmark] Define expected output for each input
   \item[\checkmark] Include diverse query types
@@ -449,18 +333,6 @@ Accuracy Bridge $\rightarrow$ Root Cause Analysis $\rightarrow$ Targeted Fix $\r
   \item[\checkmark] Use SMEs for ground truth
   \item[\checkmark] Consider cost of mistakes per category
 \end{itemize}
-\end{column}
-\begin{column}{0.48\textwidth}
-\textbf{Don't:}
-\begin{itemize}
-  \item[$\times$] Only happy-path scenarios
-  \item[$\times$] Homogeneous query types
-  \item[$\times$] Ground truth without SME review
-  \item[$\times$] Static dataset (never updated)
-  \item[$\times$] Ignore tool invocation correctness
-\end{itemize}
-\end{column}
-\end{columns}
 
 \vspace{0.5em}
 \begin{block}{Synthetic Data Generation}
@@ -470,8 +342,6 @@ Use an LLM to generate diverse test queries based on your agent's scope. Human r
 
 % ---------------- Slide: Version Control ----------------
 \begin{frame}{Versioning: Experiments and Datasets}
-
-\textbf{Critical Practice:} Version \textit{both} the agent and the evaluation dataset.
 
 \begin{block}{What to Version}
 \begin{itemize}
@@ -493,13 +363,10 @@ Use an LLM to generate diverse test queries based on your agent's scope. Human r
 \end{itemize}
 \end{block}
 
-\begin{block}{Why It Matters}
-Enables: reproducibility, regression detection, A/B comparison, audit trails.
-\end{block}
 \end{frame}
 
 % ---------------- Slide: Online Workflow ----------------
-\begin{frame}{Online Evaluation Workflow}
+\begin{frame}{Observability and Online Evaluation Workflow}
 
 \textbf{Post-Deployment Monitoring:}
 
@@ -531,32 +398,7 @@ Enables: reproducibility, regression detection, A/B comparison, audit trails.
 \end{enumerate}
 \end{frame}
 
-% ---------------- Slide: User Feedback ----------------
-\begin{frame}{Leveraging User Feedback}
 
-\textbf{Types of User Signals:}
-
-\begin{tabular}{p{3cm}p{4cm}p{3cm}}
-\toprule
-\textbf{Signal} & \textbf{What It Captures} & \textbf{Limitation} \\
-\midrule
-Thumbs Up/Down & Binary satisfaction & No detail on \textit{why} \\
-Star Rating & Graded satisfaction & Still lacks specifics \\
-Free-text Feedback & Detailed user input & Unstructured, hard to aggregate \\
-Explicit Corrections & What should have been said & High signal, rare \\
-Implicit Signals & Retry, abandon, escalate & Requires inference \\
-\bottomrule
-\end{tabular}
-
-\vspace{0.5em}
-\begin{block}{Best Practice}
-\begin{itemize}
-  \item Use \textbf{thumbs-down} as a prioritization signal for manual review
-  \item Don't rely solely on feedback---users don't always report errors
-  \item Combine with automated flagging (LLM-as-a-Judge)
-\end{itemize}
-\end{block}
-\end{frame}
 
 % ---------------- Slide: LLM as a Judge Intro ----------------
 \begin{frame}{LLM-as-a-Judge: Scaling Evaluation}
@@ -579,64 +421,6 @@ Use Case & Automate scoring at scale & Prioritize traces for review \\
 
 \begin{block}{Critical Requirement}
 LLM-as-a-Judge must be \textbf{calibrated} against human-labeled data. Human labeling remains the source of truth.
-\end{block}
-\end{frame}
-
-% ---------------- Slide: LLM as a Judge Design ----------------
-\begin{frame}{Designing an LLM-as-a-Judge}
-
-\textbf{Key Design Decisions:}
-
-\begin{enumerate}
-  \item \textbf{Judge Model Selection}
-  \begin{itemize}
-    \item Often use a stronger/different model than the agent
-    \item Trade-off: cost vs. reliability
-  \end{itemize}
-  
-  \item \textbf{Judge Prompt Engineering}
-  \begin{itemize}
-    \item Define evaluation criteria explicitly
-    \item Provide rubric with examples
-    \item Request structured output (scores + reasoning)
-  \end{itemize}
-  
-  \item \textbf{Calibration Process}
-  \begin{itemize}
-    \item Run judge on human-labeled gold set
-    \item Measure agreement rate (Cohen's Kappa, accuracy)
-    \item Set threshold: only deploy if agreement $> X\%$
-  \end{itemize}
-  
-  \item \textbf{Ongoing Monitoring}
-  \begin{itemize}
-    \item Periodically re-validate against new human labels
-    \item Watch for judge drift
-  \end{itemize}
-\end{enumerate}
-\end{frame}
-
-% ---------------- Slide: LLM as a Judge Pitfalls ----------------
-\begin{frame}{LLM-as-a-Judge: Pitfalls and Mitigations}
-
-\begin{tabular}{p{3.5cm}p{6.5cm}}
-\toprule
-\textbf{Pitfall} & \textbf{Mitigation} \\
-\midrule
-\textbf{Self-preference bias} & Judge favors outputs similar to its own style. Use different model family for judge. \\
-\addlinespace
-\textbf{Position bias} & In pairwise comparison, judge prefers first/second option. Randomize order, average scores. \\
-\addlinespace
-\textbf{Verbosity bias} & Longer responses rated higher regardless of quality. Explicitly instruct to ignore length. \\
-\addlinespace
-\textbf{Lack of calibration} & Judge disagrees with humans. Mandatory calibration on gold set before deployment. \\
-\addlinespace
-\textbf{Domain blindness} & Judge lacks domain expertise. Include domain context in prompt, or use domain-specific judge. \\
-\bottomrule
-\end{tabular}
-
-\begin{block}{Golden Rule}
-Never fully automate evaluation with LLM-as-a-Judge without ongoing human validation.
 \end{block}
 \end{frame}
 
@@ -708,122 +492,157 @@ With ground truth, scoring is more objective and can catch subtle omissions or a
 \end{block}
 \end{frame}
 
-% ---------------- Slide: Langfuse HLD ----------------
-\begin{frame}{Production Agent Evaluation: A Two-Phase System}
+% % ---------------- Slide: Langfuse HLD ----------------
+% \begin{frame}{Production Agent Evaluation: A Two-Phase System}
 
-\scriptsize
+% \scriptsize
 
+% \begin{center}
+% \begin{tikzpicture}[
+%   node distance=0.6cm,
+%   phase/.style={rectangle, draw, thick, rounded corners, minimum width=2.5cm, minimum height=2.2cm, font=\scriptsize, align=center, fill=blue!5},
+%   langfuse/.style={rectangle, draw, thick, rounded corners, minimum width=1.8cm, minimum height=2.5cm, font=\tiny, align=left, fill=orange!10},
+%   arrow/.style={->, thick}
+% ]
+
+% % Phase 1: Offline (Beta)
+% \node[phase] (beta) at (0,0) {
+%   \textbf{Phase 1}\\
+%   \textbf{Offline}\\[0.15cm]
+%   \tiny
+%   • Iterate\\
+%   • Eval dataset\\
+%   • Judge scores\\
+%   • Gate
+% };
+
+% % Langfuse in the center
+% \node[langfuse] (langfuse) at (3.5,0) {
+%   \textbf{Langfuse}\\[0.05cm]
+%   \tiny
+%   Traces\\
+%   Scores\\
+%   Datasets\\
+%   Annotations\\
+%   Prompts\\
+%   Evaluators
+% };
+
+% % Phase 2: Online (Prod)
+% \node[phase] (prod) at (7,0) {
+%   \textbf{Phase 2}\\
+%   \textbf{Online}\\[0.15cm]
+%   \tiny
+%   • Real users\\
+%   • Monitor\\
+%   • Feedback\\
+%   • Review
+% };
+
+% % Arrows
+% \draw[arrow] (beta.east) -- (langfuse.west);
+% \draw[arrow] (langfuse.east) -- (prod.west);
+% \draw[arrow, bend left=35] (beta.north) to node[above, font=\tiny] {promote} (prod.north);
+% \draw[arrow, bend left=35] (prod.south) to node[below, font=\tiny] {feedback} (beta.south);
+
+% \end{tikzpicture}
+% \end{center}
+
+% \vspace{0.4em}
+% \begin{columns}[T]
+% \begin{column}{0.48\textwidth}
+% \textbf{Offline (Beta):}
+% \begin{itemize}
+%   \item Experiment on eval datasets
+%   \item LLM-as-a-Judge automated scoring
+%   \item Accuracy gate before promotion
+% \end{itemize}
+% \end{column}
+% \begin{column}{0.48\textwidth}
+% \textbf{Online (Production):}
+% \begin{itemize}
+%   \item Continuous trace monitoring
+%   \item User feedback collection
+%   \item Weekly human review
+% \end{itemize}
+% \end{column}
+% \end{columns}
+
+% \vspace{0.3em}
+% \begin{block}{Key Insight}
+% Production failures feed back into the evaluation dataset, creating continuous improvement.
+% \end{block}
+
+% \end{frame}
+
+% ---------------- Slide: High-Level Architecture ----------------
+\begin{frame}{High-Level Architecture}
 \begin{center}
-\begin{tikzpicture}[
-  node distance=0.6cm,
-  phase/.style={rectangle, draw, thick, rounded corners, minimum width=2.5cm, minimum height=2.2cm, font=\scriptsize, align=center, fill=blue!5},
-  langfuse/.style={rectangle, draw, thick, rounded corners, minimum width=1.8cm, minimum height=2.5cm, font=\tiny, align=left, fill=orange!10},
-  arrow/.style={->, thick}
-]
-
-% Phase 1: Offline (Beta)
-\node[phase] (beta) at (0,0) {
-  \textbf{Phase 1}\\
-  \textbf{Offline}\\[0.15cm]
-  \tiny
-  • Iterate\\
-  • Eval dataset\\
-  • Judge scores\\
-  • Gate
-};
-
-% Langfuse in the center
-\node[langfuse] (langfuse) at (3.5,0) {
-  \textbf{Langfuse}\\[0.05cm]
-  \tiny
-  Traces\\
-  Scores\\
-  Datasets\\
-  Annotations\\
-  Prompts\\
-  Evaluators
-};
-
-% Phase 2: Online (Prod)
-\node[phase] (prod) at (7,0) {
-  \textbf{Phase 2}\\
-  \textbf{Online}\\[0.15cm]
-  \tiny
-  • Real users\\
-  • Monitor\\
-  • Feedback\\
-  • Review
-};
-
-% Arrows
-\draw[arrow] (beta.east) -- (langfuse.west);
-\draw[arrow] (langfuse.east) -- (prod.west);
-\draw[arrow, bend left=35] (beta.north) to node[above, font=\tiny] {promote} (prod.north);
-\draw[arrow, bend left=35] (prod.south) to node[below, font=\tiny] {feedback} (beta.south);
-
-\end{tikzpicture}
+\includegraphics[width=0.95\textwidth,height=0.85\textheight,keepaspectratio]{images/HLD.png}
 \end{center}
-
-\vspace{0.4em}
-\begin{columns}[T]
-\begin{column}{0.48\textwidth}
-\textbf{Offline (Beta):}
-\begin{itemize}
-  \item Experiment on eval datasets
-  \item LLM-as-a-Judge automated scoring
-  \item Accuracy gate before promotion
-\end{itemize}
-\end{column}
-\begin{column}{0.48\textwidth}
-\textbf{Online (Production):}
-\begin{itemize}
-  \item Continuous trace monitoring
-  \item User feedback collection
-  \item Weekly human review
-\end{itemize}
-\end{column}
-\end{columns}
-
-\vspace{0.3em}
-\begin{block}{Key Insight}
-Production failures feed back into the evaluation dataset, creating continuous improvement.
-\end{block}
-
 \end{frame}
 
-% ---------------- Slide: Sampling Strategies ----------------
-\begin{frame}{Sampling Strategies for High-Volume Agents}
+% ---------------- Slide: Demo Chatbot ----------------
+\begin{frame}{Shopping Assistant: Demo Chatbot}
+\begin{center}
+\includegraphics[width=0.95\textwidth,height=0.85\textheight,keepaspectratio]{images/lang_0.png}
+\end{center}
+\end{frame}
 
-\textbf{Problem:} Can't manually review every trace when volume is high.
+% ---------------- Slide: Langfuse Demo 1 ----------------
+\begin{frame}{Langfuse Demo: Traces and Datasets}
+\begin{center}
+\includegraphics[width=0.95\textwidth,height=0.85\textheight,keepaspectratio]{images/lang_1.png}
+\end{center}
+\end{frame}
 
-\begin{block}{Sampling Approaches}
-\begin{enumerate}
-  \item \textbf{Random Sampling}
-  \begin{itemize}
-    \item Simple, unbiased estimate of overall quality
-    \item May miss rare but important failure modes
-  \end{itemize}
-  
-  \item \textbf{Stratified Sampling}
-  \begin{itemize}
-    \item Sample proportionally across categories (query type, user segment)
-    \item Ensures representation of all strata
-  \end{itemize}
-  
-  \item \textbf{Importance Sampling}
-  \begin{itemize}
-    \item Oversample high-risk or high-value interactions
-    \item Weight results to recover population estimates
-  \end{itemize}
-  
-  \item \textbf{Signal-Based Sampling}
-  \begin{itemize}
-    \item Prioritize: thumbs-down, long latency, errors, LLM-as-a-Judge flags
-  \end{itemize}
-\end{enumerate}
-\end{block}
+% ---------------- Slide: Langfuse Demo 2 ----------------
+\begin{frame}{Langfuse Demo: Scoring and Evaluation}
+\begin{center}
+\includegraphics[width=0.95\textwidth,height=0.85\textheight,keepaspectratio]{images/lang_2.png}
+\end{center}
+\end{frame}
 
-Combine strategies: e.g., random baseline + signal-based enrichment.
+% ---------------- Slide: Langfuse Demo 3 ----------------
+\begin{frame}{Langfuse Demo: Annotations}
+\begin{center}
+\includegraphics[width=0.95\textwidth,height=0.85\textheight,keepaspectratio]{images/lang_3.png}
+\end{center}
+\end{frame}
+
+% ---------------- Slide: Langfuse Demo 4 ----------------
+\begin{frame}{Langfuse Demo: Prompt Management}
+\begin{center}
+\includegraphics[width=0.95\textwidth,height=0.85\textheight,keepaspectratio]{images/lang_4.png}
+\end{center}
+\end{frame}
+
+% ---------------- Slide: Langfuse Demo 5 ----------------
+\begin{frame}{Langfuse Demo: Evaluators}
+\begin{center}
+\includegraphics[width=0.95\textwidth,height=0.85\textheight,keepaspectratio]{images/Lang_5.png}
+\end{center}
+\end{frame}
+
+% ---------------- Slide: Langfuse Demo 6 ----------------
+\begin{frame}{Langfuse Demo: Analytics Dashboard}
+\begin{center}
+\includegraphics[width=0.95\textwidth,height=0.85\textheight,keepaspectratio]{images/lang_6.png}
+\end{center}
+\end{frame}
+
+% ---------------- Slide: Langfuse Demo 7 ----------------
+\begin{frame}{Langfuse Demo: Monitoring}
+\begin{center}
+\includegraphics[width=0.95\textwidth,height=0.85\textheight,keepaspectratio]{images/Lang_7.png}
+\end{center}
+\end{frame}
+
+% ---------------- Slide: Langfuse Demo 8 ----------------
+\begin{frame}{Langfuse Demo: Production Insights}
+\begin{center}
+\includegraphics[width=0.95\textwidth,height=0.85\textheight,keepaspectratio]{images/Lang_8.png}
+\end{center}
 \end{frame}
 
 % ---------------- Slide: Closing the Loop ----------------
@@ -880,31 +699,6 @@ Over time, evaluation dataset reflects real production challenges $\rightarrow$ 
 \end{itemize}
 \end{block}
 
-\textbf{Example Platforms:} Langfuse, LangSmith, Weights \& Biases Weave, custom solutions.
-\end{frame}
-
-% ---------------- Slide: Observability ----------------
-\begin{frame}{Agent Observability: What to Capture}
-
-\textbf{Comprehensive Tracing:}
-
-\begin{tabular}{p{3cm}p{7cm}}
-\toprule
-\textbf{Component} & \textbf{What to Log} \\
-\midrule
-\textbf{Input} & User query, session ID, timestamp, user metadata \\
-\textbf{Planning} & Reasoning steps, selected tools, agent routing decisions \\
-\textbf{Tool Calls} & Tool name, parameters, response, latency, errors \\
-\textbf{LLM Invocations} & Prompt, completion, model, tokens, latency, cost \\
-\textbf{Output} & Final response, confidence signals, citations \\
-\textbf{Feedback} & User rating, explicit feedback, implicit signals \\
-\textbf{Metadata} & Agent version, experiment ID, environment \\
-\bottomrule
-\end{tabular}
-
-\begin{block}{Design Principle}
-Log at a granularity that enables \textbf{root cause analysis}. If you can't trace a failure to a specific step, you can't fix it.
-\end{block}
 \end{frame}
 
 % ---------------- Slide: Reporting ----------------
@@ -932,52 +726,6 @@ Corrective actions: ...''
 \end{block}
 \end{frame}
 
-% ---------------- Slide: Common Risks ----------------
-\begin{frame}{Common Risks in Agent Evaluation}
-
-\begin{tabular}{p{2.5cm}p{4cm}p{4cm}}
-\toprule
-\textbf{Risk} & \textbf{Description} & \textbf{Mitigation} \\
-\midrule
-\textbf{Under-labeling} & Not enough traces reviewed & Set review targets, allocate dedicated time \\
-\addlinespace
-\textbf{Eval Set Gaming} & Eval dataset doesn't represent production & Follow best practices, continuously update from production \\
-\addlinespace
-\textbf{Judge Misuse} & LLM-as-a-Judge without calibration & Mandatory calibration, periodic re-validation \\
-\addlinespace
-\textbf{Metric Fixation} & Optimizing one metric at expense of others & Track all five dimensions, set balanced thresholds \\
-\addlinespace
-\textbf{Drift Blindness} & Not detecting degradation over time & Automated monitoring, scheduled audits \\
-\bottomrule
-\end{tabular}
-\end{frame}
-
-% ---------------- Slide: Tooling Landscape ----------------
-\begin{frame}{Agent Evaluation Tooling Landscape}
-
-\textbf{Open Source \& Commercial Platforms:}
-
-\begin{tabular}{p{3cm}p{7cm}}
-\toprule
-\textbf{Tool} & \textbf{Key Capabilities} \\
-\midrule
-\textbf{Langfuse} & Tracing, scoring, prompt management, analytics \\
-\textbf{LangSmith} & Tracing, evaluation, dataset management, hub \\
-\textbf{Weights \& Biases} & Experiment tracking, Weave for LLM tracing \\
-\textbf{Arize Phoenix} & Observability, evaluation, embedding analysis \\
-\textbf{Braintrust} & Eval framework, scoring, CI/CD integration \\
-\textbf{Ragas} & RAG-specific evaluation metrics \\
-\textbf{DeepEval} & Unit testing framework for LLMs \\
-\textbf{OpenAI Evals} & Evaluation framework and benchmarks \\
-\bottomrule
-\end{tabular}
-
-\vspace{0.3em}
-\begin{block}{Build vs. Buy}
-Evaluate based on: integration needs, customization requirements, scale, and team expertise.
-\end{block}
-\end{frame}
-
 % ---------------- Slide: Summary ----------------
 \begin{frame}{Agent Evaluation: Key Takeaways}
 
@@ -999,45 +747,45 @@ Evaluate based on: integration needs, customization requirements, scale, and tea
   
   \item \textbf{Observability is foundational}: Can't improve what you can't trace
   
-  \item \textbf{Version everything}: Agent configs, datasets, and results
+  \item \textbf{Versioning}: Agent configs, datasets, and results
 \end{enumerate}
 \end{frame}
 
-% ---------------- Slide: Comparison ----------------
-\begin{frame}{LLM vs. Agent Evaluation: Summary Comparison}
+% % ---------------- Slide: Comparison ----------------
+% \begin{frame}{LLM vs. Agent Evaluation: Summary Comparison}
 
-\small
-\begin{tabular}{p{3cm}p{4cm}p{4cm}}
-\toprule
-\textbf{Dimension} & \textbf{LLM Application} & \textbf{Agent} \\
-\midrule
-Complexity & Single model call & Multi-step, multi-component \\
-Failure Modes & Output quality & + Tool selection, orchestration, state \\
-Key Metrics & Task-specific (precision, recall, BLEU, etc.) & Adoption, Coverage, Latency, Accuracy, Cost \\
-Accuracy Analysis & Binary or rubric-based & Accuracy Bridge taxonomy \\
-Ground Truth & Often available offline & Harder to define for multi-step tasks \\
-Observability & Input/output logging & Full trace: planning, tools, intermediate steps \\
-Iteration Unit & Prompt version & Agent config (prompts + tools + orchestration) \\
-\bottomrule
-\end{tabular}
+% \small
+% \begin{tabular}{p{3cm}p{4cm}p{4cm}}
+% \toprule
+% \textbf{Dimension} & \textbf{LLM Application} & \textbf{Agent} \\
+% \midrule
+% Complexity & Single model call & Multi-step, multi-component \\
+% Failure Modes & Output quality & + Tool selection, orchestration, state \\
+% Key Metrics & Task-specific (precision, recall, BLEU, etc.) & Adoption, Coverage, Latency, Accuracy, Cost \\
+% Accuracy Analysis & Binary or rubric-based & Accuracy Bridge taxonomy \\
+% Ground Truth & Often available offline & Harder to define for multi-step tasks \\
+% Observability & Input/output logging & Full trace: planning, tools, intermediate steps \\
+% Iteration Unit & Prompt version & Agent config (prompts + tools + orchestration) \\
+% \bottomrule
+% \end{tabular}
 
-\vspace{0.5em}
-\begin{block}{Unifying Principle}
-Both require: systematic evaluation, continuous monitoring, feedback loops, and human oversight.
-\end{block}
-\end{frame}
+% \vspace{0.5em}
+% \begin{block}{Unifying Principle}
+% Both require: systematic evaluation, continuous monitoring, feedback loops, and human oversight.
+% \end{block}
+% \end{frame}
 
 % ---------------- Slide: Questions ----------------
 \begin{frame}{Questions?}
 
-\begin{block}{Key Resources}
-\begin{itemize}
-  \item Langfuse Documentation: \url{https://langfuse.com/docs}
-  \item LangChain Evaluation Guide: \url{https://python.langchain.com/docs/guides/evaluation}
-  \item ``Judging LLM-as-a-Judge'' (Zheng et al., 2023)
-  \item RAGAS: \url{https://docs.ragas.io}
-\end{itemize}
-\end{block}
+% \begin{block}{Key Resources}
+% \begin{itemize}
+%   \item Langfuse Documentation: \url{https://langfuse.com/docs}
+%   \item LangChain Evaluation Guide: \url{https://python.langchain.com/docs/guides/evaluation}
+%   \item ``Judging LLM-as-a-Judge'' (Zheng et al., 2023)
+%   \item RAGAS: \url{https://docs.ragas.io}
+% \end{itemize}
+% \end{block}
 
 \vspace{1em}
 \begin{center}

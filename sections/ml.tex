@@ -9,20 +9,10 @@
   \item Behavior is learned from data (not explicitly coded)
   \item Correctness is statistical: performance depends on the data distribution
   \item Generalization matters: in-sample vs out-of-sample
-\end{itemize}
-\begin{block}{Core shift}
-From \textit{``is it correct?''} to \textit{``how often is it correct, and under what distribution?''}
-\end{block}
-\end{frame}
-
-% ---------------- Slide 8 ----------------
-\begin{frame}{ML evaluation primitives}
-\begin{itemize}
   \item Train/validation/test splits; cross-validation
-  \item Metrics: accuracy, precision/recall, calibration, AUC, error analysis
+  \item Metrics: MSE, RMSE, accuracy, precision/recall, ..
   \item Failure modes: overfitting, leakage, distribution shift
 \end{itemize}
-\begin{block}{Mental model}
-The system is approximately correct (with uncertainty bounds).
-\end{block}
 \end{frame}
+
+

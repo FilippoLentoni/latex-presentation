@@ -4,7 +4,7 @@
 \section{LLM Application Evaluation}
 
 % ---------------- Slide: LLM Capabilities ----------------
-\begin{frame}{What Can LLMs Do?}
+\begin{frame}{3) LLM}
 \begin{columns}[T]
 \begin{column}{0.48\textwidth}
 \textbf{Core Capabilities:}
@@ -22,18 +22,15 @@
   \item Output is \textbf{free-form text}
   \item Multiple valid answers exist
   \item ``Correctness'' is often subjective
-  \item Traditional accuracy doesn't apply
+  
 \end{itemize}
 \end{column}
 \end{columns}
 
-\begin{block}{Key Insight}
-Unlike classification (one correct label), LLM outputs require \textbf{semantic} evaluation.
-\end{block}
 \end{frame}
 
 % ---------------- Slide: Stochastic Nature ----------------
-\begin{frame}{LLMs: A Distributional View}
+\begin{frame}{3) LLM}
 \begin{itemize}
   \item Output is a \textbf{stochastic token trajectory}, not a single label
   \item Multiple completions can be acceptable for the same prompt
@@ -66,10 +63,9 @@ Prompt engineering is often more impactful than model selection for task perform
 \end{frame}
 
 % ---------------- Slide: Prompt Engineering ----------------
-\begin{frame}{Prompt Engineering Strategies}
+\begin{frame}{3) LLM: Prompt Engineering Strategies}
 
-\begin{columns}[T]
-\begin{column}{0.48\textwidth}
+
 \textbf{Core Techniques:}
 \begin{enumerate}
   \item \textbf{Clear Instructions} \\
@@ -81,21 +77,7 @@ Prompt engineering is often more impactful than model selection for task perform
   \item \textbf{Role/Persona} \\
         ``You are an expert in...''
 \end{enumerate}
-\end{column}
-\begin{column}{0.48\textwidth}
-\textbf{Advanced Techniques:}
-\begin{enumerate}
-  \item \textbf{Self-Consistency} \\
-        Sample multiple, take majority
-  \item \textbf{Decomposition} \\
-        Break complex tasks into steps
-  \item \textbf{Guardrails} \\
-        Define boundaries, edge cases
-  \item \textbf{Abstention Prompting} \\
-        Allow ``I don't know'' (next slide)
-\end{enumerate}
-\end{column}
-\end{columns}
+
 
 \vspace{0.5em}
 \begin{block}{Evaluation Implication}
@@ -115,24 +97,24 @@ Explicitly instruct the model to decline when information is insufficient:
 \end{quote}
 \end{block}
 
-\begin{columns}[T]
-\begin{column}{0.48\textwidth}
-\textbf{Without Abstention:}
-\begin{itemize}
-  \item High coverage
-  \item Lower precision
-  \item Hidden errors
-\end{itemize}
-\end{column}
-\begin{column}{0.48\textwidth}
-\textbf{With Abstention:}
-\begin{itemize}
-  \item Lower coverage
-  \item Higher precision
-  \item Explicit uncertainty
-\end{itemize}
-\end{column}
-\end{columns}
+% \begin{columns}[T]
+% \begin{column}{0.48\textwidth}
+% \textbf{Without Abstention:}
+% \begin{itemize}
+%   \item High coverage
+%   \item Lower precision
+%   \item Hidden errors
+% \end{itemize}
+% \end{column}
+% \begin{column}{0.48\textwidth}
+% \textbf{With Abstention:}
+% \begin{itemize}
+%   \item Lower coverage
+%   \item Higher precision
+%   \item Explicit uncertainty
+% \end{itemize}
+% \end{column}
+% \end{columns}
 
 \vspace{0.3em}
 \begin{block}{When to Use}
@@ -162,71 +144,68 @@ Use abstention when the \textbf{cost of a wrong answer} exceeds the \textbf{cost
 \end{enumerate}
 \end{block}
 
-\begin{block}{Analogy to ML}
-Prompt = Model, Examples in Prompt = Training Data, Evaluation Set = Test Set
-\end{block}
 \end{frame}
 
 % ---------------- Slide: LLM Evaluation Toolkit ----------------
-\begin{frame}{LLM Evaluation Toolkit}
+\begin{frame}{LLM Evaluation Metrics}
 
-\begin{enumerate}
-  \item \textbf{Rubric-based Human Evaluation}
-  \begin{itemize}
-    \item Dimensions: correctness, completeness, safety, format, helpfulness
-    \item Gold standard but expensive and slow
-  \end{itemize}
+% \begin{enumerate}
+%   \item \textbf{Rubric-based Human Evaluation}
+%   \begin{itemize}
+%     \item Dimensions: correctness, completeness, safety, format, helpfulness
+%     \item Gold standard but expensive and slow
+%   \end{itemize}
   
-  \item \textbf{Task-Specific Metrics}
-  \begin{itemize}
-    \item Extraction: accuracy, F1 on entities
-    \item Classification: precision, recall, confusion matrix
-    \item Code: execution success, test pass rate
-    \item Structured output: schema validity
-  \end{itemize}
+%   \item \textbf{Task-Specific Metrics}
+%   \begin{itemize}
+%     \item Extraction: accuracy, F1 on entities
+%     \item Classification: precision, recall, confusion matrix
+%     \item Code: execution success, test pass rate
+%     \item Structured output: schema validity
+%   \end{itemize}
   
-  \item \textbf{LLM-as-a-Judge}
-  \begin{itemize}
-    \item Use a (often stronger) LLM to score outputs
-    \item Scalable but requires calibration against human labels
-    \item Must monitor for judge drift over time
-  \end{itemize}
-\end{enumerate}
+%   \item \textbf{LLM-as-a-Judge}
+%   \begin{itemize}
+%     \item Use a (often stronger) LLM to score outputs
+%     \item Scalable but requires calibration against human labels
+%     \item Must monitor for judge drift over time
+%   \end{itemize}
+% \end{enumerate}
 
-\begin{block}{Key Principle}
-Match evaluation method to \textbf{task risk} and \textbf{output structure}.
-\end{block}
+% \begin{block}{Key Principle}
+% Match evaluation method to \textbf{task risk} and \textbf{output structure}.
+% \end{block}
 \end{frame}
 
 % ---------------- Slide: Offline Workflow ----------------
-\begin{frame}{Offline Evaluation Workflow}
+% \begin{frame}{Offline Evaluation Workflow}
 
-\begin{center}
-\begin{tikzpicture}[node distance=1.2cm, auto,
-  block/.style={rectangle, draw, rounded corners, minimum height=0.8cm, minimum width=2.5cm, align=center, font=\small},
-  arrow/.style={->, thick}
-]
-% Fallback: use description if tikz unavailable
-\end{tikzpicture}
-\end{center}
+% \begin{center}
+% \begin{tikzpicture}[node distance=1.2cm, auto,
+%   block/.style={rectangle, draw, rounded corners, minimum height=0.8cm, minimum width=2.5cm, align=center, font=\small},
+%   arrow/.style={->, thick}
+% ]
+% % Fallback: use description if tikz unavailable
+% \end{tikzpicture}
+% \end{center}
 
-\textbf{Step-by-Step Process:}
-\begin{enumerate}
-  \item \textbf{Create Evaluation Dataset}
-  \begin{itemize}
-    \item Diverse inputs: typical cases, edge cases, adversarial examples
-    \item Ground truth labels from domain experts (SMEs)
-  \end{itemize}
-  \item \textbf{Run Model/Prompt on Held-Out Test Set}
-  \item \textbf{Compute Metrics} (task-appropriate)
-  \item \textbf{If metrics meet threshold} $\rightarrow$ Deploy
-  \item \textbf{If not} $\rightarrow$ Iterate on prompt, model, or architecture
-\end{enumerate}
+% \textbf{Step-by-Step Process:}
+% \begin{enumerate}
+%   \item \textbf{Create Evaluation Dataset}
+%   \begin{itemize}
+%     \item Diverse inputs: typical cases, edge cases, adversarial examples
+%     \item Ground truth labels from domain experts (SMEs)
+%   \end{itemize}
+%   \item \textbf{Run Model/Prompt on Held-Out Test Set}
+%   \item \textbf{Compute Metrics} (task-appropriate)
+%   \item \textbf{If metrics meet threshold} $\rightarrow$ Deploy
+%   \item \textbf{If not} $\rightarrow$ Iterate on prompt, model, or architecture
+% \end{enumerate}
 
-\begin{block}{Critical}
-Test on \textbf{unseen data} to avoid prompt overfitting.
-\end{block}
-\end{frame}
+% \begin{block}{Critical}
+% Test on \textbf{unseen data} to avoid prompt overfitting.
+% \end{block}
+% \end{frame}
 
 % ---------------- Slide: Classification Case Study ----------------
 \begin{frame}{Case Study: LLM for Hierarchical Classification}
@@ -269,9 +248,9 @@ Test on \textbf{unseen data} to avoid prompt overfitting.
 \end{column}
 \end{columns}
 
-\begin{block}{Key Insight}
-This ``LLM app'' borrows heavily from \textbf{ML-style evaluation rigor}.
-\end{block}
+% \begin{block}{Key Insight}
+% This ``LLM app'' borrows heavily from \textbf{ML-style evaluation rigor}.
+% \end{block}
 \end{frame}
 
 % ---------------- Slide: Classification Metrics ----------------
@@ -309,57 +288,57 @@ With abstention: lower coverage $\leftrightarrow$ higher precision on classified
 \end{frame}
 
 % ---------------- Slide: UAT Design ----------------
-\begin{frame}{Designing User Acceptance Testing (UAT)}
+% \begin{frame}{Designing User Acceptance Testing (UAT)}
 
-\textbf{Goal:} Validate model performance before production deployment.
+% \textbf{Goal:} Validate model performance before production deployment.
 
-\begin{block}{UAT Design Principles}
-\begin{enumerate}
-  \item \textbf{Stratified Sampling}: Ensures representation across categories
-  \begin{itemize}
-    \item Especially important when class distribution is skewed
-    \item Sample proportionally or oversample rare classes
-  \end{itemize}
-  \item \textbf{SME Validation}: Domain experts establish ground truth
-  \item \textbf{Holdout Data}: Test on data not used for prompt development
-  \item \textbf{Slice Analysis}: Report metrics by subgroup, not just aggregate
-\end{enumerate}
-\end{block}
+% \begin{block}{UAT Design Principles}
+% \begin{enumerate}
+%   \item \textbf{Stratified Sampling}: Ensures representation across categories
+%   \begin{itemize}
+%     \item Especially important when class distribution is skewed
+%     \item Sample proportionally or oversample rare classes
+%   \end{itemize}
+%   \item \textbf{SME Validation}: Domain experts establish ground truth
+%   \item \textbf{Holdout Data}: Test on data not used for prompt development
+%   \item \textbf{Slice Analysis}: Report metrics by subgroup, not just aggregate
+% \end{enumerate}
+% \end{block}
 
-\begin{block}{Common Pitfall}
-Aggregate metrics can hide poor performance on important subgroups. Always analyze slices.
-\end{block}
-\end{frame}
+% \begin{block}{Common Pitfall}
+% Aggregate metrics can hide poor performance on important subgroups. Always analyze slices.
+% \end{block}
+% \end{frame}
 
 % ---------------- Slide: Example Metrics Report ----------------
-\begin{frame}{Example: Evaluation Metrics Report}
+% \begin{frame}{Example: Evaluation Metrics Report}
 
-\small
-\begin{center}
-\begin{tabular}{lcc}
-\toprule
-\textbf{Metric} & \textbf{Value} & \textbf{Interpretation} \\
-\midrule
-Coverage & 77\% & Cases auto-classified \\
-Precision & 93\% & Correct among positives \\
-Recall & 100\% & All true positives found \\
-False Negative Rate & 0\% & No missed critical cases \\
-\bottomrule
-\end{tabular}
-\end{center}
+% \small
+% \begin{center}
+% \begin{tabular}{lcc}
+% \toprule
+% \textbf{Metric} & \textbf{Value} & \textbf{Interpretation} \\
+% \midrule
+% Coverage & 77\% & Cases auto-classified \\
+% Precision & 93\% & Correct among positives \\
+% Recall & 100\% & All true positives found \\
+% False Negative Rate & 0\% & No missed critical cases \\
+% \bottomrule
+% \end{tabular}
+% \end{center}
 
-\vspace{0.5em}
-\textbf{Coverage Gap Analysis:}
-\begin{itemize}
-  \item 10\% -- Requires human review (by design)
-  \item 9\% -- Prompt engineering opportunity
-  \item 4\% -- Input data quality issues
-\end{itemize}
+% \vspace{0.5em}
+% \textbf{Coverage Gap Analysis:}
+% \begin{itemize}
+%   \item 10\% -- Requires human review (by design)
+%   \item 9\% -- Prompt engineering opportunity
+%   \item 4\% -- Input data quality issues
+% \end{itemize}
 
-\begin{block}{Reporting Best Practice}
-Always report \textbf{why} coverage isn't 100\% -- separates model limitations from design choices.
-\end{block}
-\end{frame}
+% \begin{block}{Reporting Best Practice}
+% Always report \textbf{why} coverage isn't 100\% -- separates model limitations from design choices.
+% \end{block}
+% \end{frame}
 
 % ---------------- Slide: Explainability ----------------
 \begin{frame}{Explainability-Driven Feedback Loop}
@@ -386,28 +365,28 @@ Black-box models require post-hoc explanations (SHAP, LIME). LLMs can explain na
 \end{frame}
 
 % ---------------- Slide: Online Monitoring ----------------
-\begin{frame}{Post-Deployment: Continuous Monitoring}
+% \begin{frame}{Post-Deployment: Continuous Monitoring}
 
-\textbf{Offline evaluation is necessary but not sufficient.}
+% \textbf{Offline evaluation is necessary but not sufficient.}
 
-\begin{block}{Online Monitoring Activities}
-\begin{enumerate}
-  \item \textbf{Log all predictions}: Input, output, reasoning, latency, cost
-  \item \textbf{Periodic Audits}: Weekly/monthly sampling of production outputs
-  \item \textbf{Ground Truth Creation}: SMEs label sampled cases
-  \item \textbf{Metric Tracking}: Monitor for drift from offline performance
-  \item \textbf{Feedback Integration}: User signals (thumbs up/down, corrections)
-\end{enumerate}
-\end{block}
+% \begin{block}{Online Monitoring Activities}
+% \begin{enumerate}
+%   \item \textbf{Log all predictions}: Input, output, reasoning, latency, cost
+%   \item \textbf{Periodic Audits}: Weekly/monthly sampling of production outputs
+%   \item \textbf{Ground Truth Creation}: SMEs label sampled cases
+%   \item \textbf{Metric Tracking}: Monitor for drift from offline performance
+%   \item \textbf{Feedback Integration}: User signals (thumbs up/down, corrections)
+% \end{enumerate}
+% \end{block}
 
-\begin{block}{Continuous Improvement Cycle}
-$$
-\text{Production} \rightarrow \text{Sample} \rightarrow \text{Label} \rightarrow \text{Analyze} \rightarrow \text{Update Prompt} \rightarrow \text{Re-deploy}
-$$
-\end{block}
+% \begin{block}{Continuous Improvement Cycle}
+% $$
+% \text{Production} \rightarrow \text{Sample} \rightarrow \text{Label} \rightarrow \text{Analyze} \rightarrow \text{Update Prompt} \rightarrow \text{Re-deploy}
+% $$
+% \end{block}
 
-Labeled production errors should feed back into the offline evaluation dataset.
-\end{frame}
+% Labeled production errors should feed back into the offline evaluation dataset.
+% \end{frame}
 
 % ---------------- Slide: Self-Service Platforms ----------------
 \begin{frame}{Self-Service Experimentation Platforms}
@@ -431,27 +410,27 @@ Self-service platforms can reduce ML engineer involvement by 50-75\% for prompt-
 \end{frame}
 
 % ---------------- Slide: LLM Summary ----------------
-\begin{frame}{LLM Evaluation: Key Takeaways}
+% \begin{frame}{LLM Evaluation: Key Takeaways}
 
-\begin{enumerate}
-  \item \textbf{Free-form output} requires semantic evaluation, not exact match
+% \begin{enumerate}
+%   \item \textbf{Free-form output} requires semantic evaluation, not exact match
   
-  \item \textbf{Traditional metrics} (BLEU, ROUGE, METEOR) have limitations; use task-specific metrics when possible
+%   \item \textbf{Traditional metrics} (BLEU, ROUGE, METEOR) have limitations; use task-specific metrics when possible
   
-  \item \textbf{Prompt = Model}: Treat prompt versions like model versions; evaluate systematically
+%   \item \textbf{Prompt = Model}: Treat prompt versions like model versions; evaluate systematically
   
-  \item \textbf{Avoid overfitting}: Test on held-out data, use stratified sampling
+%   \item \textbf{Avoid overfitting}: Test on held-out data, use stratified sampling
   
-  \item \textbf{Abstention} trades coverage for accuracy -- use when error cost is high
+%   \item \textbf{Abstention} trades coverage for accuracy -- use when error cost is high
   
-  \item \textbf{Explainability} enables debugging and builds trust
+%   \item \textbf{Explainability} enables debugging and builds trust
   
-  \item \textbf{Continuous monitoring}: Offline metrics $\neq$ online performance; audit regularly
+%   \item \textbf{Continuous monitoring}: Offline metrics $\neq$ online performance; audit regularly
   
-  \item \textbf{Close the loop}: Production errors $\rightarrow$ evaluation dataset $\rightarrow$ better prompts
-\end{enumerate}
+%   \item \textbf{Close the loop}: Production errors $\rightarrow$ evaluation dataset $\rightarrow$ better prompts
+% \end{enumerate}
 
-\begin{block}{Core Principle}
-Good LLM evaluation is \textbf{workflow engineering}: metrics + audits + iteration tooling.
-\end{block}
-\end{frame}
+% \begin{block}{Core Principle}
+% Good LLM evaluation is \textbf{workflow engineering}: metrics + audits + iteration tooling.
+% \end{block}
+% \end{frame}
