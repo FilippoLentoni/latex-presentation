@@ -575,17 +575,17 @@ With ground truth, scoring is more objective and can catch subtle omissions or a
 
 % \end{frame}
 
+% ---------------- Slide: Demo Chatbot ----------------
+\begin{frame}{Shopping Assistant}
+\begin{center}
+\includegraphics[width=0.95\textwidth,height=0.85\textheight,keepaspectratio]{images/lang_0.png}
+\end{center}
+\end{frame}
+
 % ---------------- Slide: High-Level Architecture ----------------
 \begin{frame}{High-Level Architecture}
 \begin{center}
 \includegraphics[width=0.95\textwidth,height=0.85\textheight,keepaspectratio]{images/HLD.png}
-\end{center}
-\end{frame}
-
-% ---------------- Slide: Demo Chatbot ----------------
-\begin{frame}{Shopping Assistant: Demo Chatbot}
-\begin{center}
-\includegraphics[width=0.95\textwidth,height=0.85\textheight,keepaspectratio]{images/lang_0.png}
 \end{center}
 \end{frame}
 
@@ -781,6 +781,105 @@ Corrective actions: ...''
 % Both require: systematic evaluation, continuous monitoring, feedback loops, and human oversight.
 % \end{block}
 % \end{frame}
+
+%===========================================================
+% Slide: MMLU (Real Sample)
+%===========================================================
+\begin{frame}{Global Benchmark: MMLU (Knowledge \& Reasoning)}
+\small
+
+\textbf{MMLU (Massive Multitask Language Understanding)}\\
+57 subjects (math, law, physics, medicine, etc.), multiple-choice format.\\
+Metric: \textbf{Accuracy} (correct option vs. ground truth).
+
+\vspace{0.6em}
+\textbf{Real Sample Question (Abstract Algebra):}
+
+\begin{quote}
+$(\mathbb{Z}, *)$ is a group with $a * b = a + b + 1$ for all $a,b \in \mathbb{Z}$.\\
+What is the inverse of $a$?
+\begin{itemize}
+  \item A) $0$
+  \item B) $-2$
+  \item C) $a - 2$
+  \item D) $(2 + a) * -1$
+\end{itemize}
+\end{quote}
+
+\textbf{Correct answer: C} (as provided in benchmark sample).
+
+\vspace{0.4em}
+\footnotesize
+\textbf{Source:} Hendrycks et al., 2021 (MMLU); publicly hosted example.
+\end{frame}
+
+%===========================================================
+% Slide: SWE-bench (Real Dataset Sample)
+%===========================================================
+\begin{frame}{Global Benchmark: SWE-bench (Execution-Based Coding)}
+\small
+
+\textbf{SWE-bench} evaluates LLMs on real GitHub issues.\\
+Task: generate a patch that makes failing tests pass.\\
+Metric: \textbf{Execution success rate} (tests pass after patch).
+
+\vspace{0.6em}
+\textbf{Real Instance Structure (Dataset Example):}
+
+\begin{itemize}
+  \item \texttt{"instance\_id": "sympy\_\_sympy-11400"}
+  \item \texttt{"repo": "sympy/sympy"}
+  \item \texttt{"problem\_statement": "ccode(sinc(x)) doesn't work"}
+  \item \texttt{"patch": Gold solution patch from PR}
+\end{itemize}
+
+Evaluation:
+\begin{itemize}
+  \item Apply model-generated patch
+  \item Run repository test suite
+  \item Success = failing tests move from \textit{fail-to-pass}
+\end{itemize}
+
+\vspace{0.4em}
+\footnotesize
+\textbf{Source:} Jimenez et al., 2024 (SWE-bench); official dataset documentation.
+\end{frame}
+
+%===========================================================
+% Slide: τ-bench (Real Interactive Benchmark)
+%===========================================================
+\begin{frame}{Global Benchmark: $\tau$-bench (Interactive Agent Evaluation)}
+\small
+
+\textbf{$\tau$-bench} evaluates tool-using agents in realistic multi-turn domains
+(e.g., airline booking, retail customer support).
+
+\vspace{0.5em}
+\textbf{Benchmark Description (from documentation):}
+
+\begin{quote}
+$\tau$-bench emulates dynamic conversations between a user and a language agent
+provided with domain-specific API tools and policy guidelines.
+\end{quote}
+
+\vspace{0.4em}
+Typical Tasks:
+\begin{itemize}
+  \item Airline: rebooking flights, baggage claims, seat upgrades
+  \item Retail: order tracking, returns, product exchanges
+\end{itemize}
+
+\vspace{0.4em}
+Metric:
+\begin{itemize}
+  \item \textbf{Pass$^1$}: probability of successfully completing the task in one trajectory
+  \item Measures long-horizon reasoning + tool execution
+\end{itemize}
+
+\vspace{0.4em}
+\footnotesize
+\textbf{Source:} Yao et al., 2024 ($\tau$-bench); official benchmark documentation.
+\end{frame}
 
 % ---------------- Slide: Questions ----------------
 \begin{frame}{Questions?}

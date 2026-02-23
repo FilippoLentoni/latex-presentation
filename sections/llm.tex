@@ -177,6 +177,83 @@ Use abstention when the \textbf{cost of a wrong answer} exceeds the \textbf{cost
 % \end{block}
 \end{frame}
 
+%===========================================================
+% Slide: Classical text-based metrics (with formulas + example)
+%===========================================================
+\begin{frame}{Reference-Based Text Metrics (BLEU, ROUGE, METEOR)}
+\small
+
+\textbf{Setup:} compare model output $y$ to reference (gold) $y^\star$.
+
+\vspace{0.4em}
+\textbf{BLEU (typically MT): n-gram precision + brevity penalty}
+\[
+\text{BLEU} = \text{BP} \cdot \exp\!\Big(\sum_{n=1}^{N} w_n \log p_n\Big),\qquad
+\text{BP}=
+\begin{cases}
+1 & |y| \ge |y^\star|\\
+\exp(1-|y^\star|/|y|) & |y|<|y^\star|
+\end{cases}
+\]
+where $p_n$ = clipped $n$-gram precision.
+
+\vspace{0.2em}
+\textbf{ROUGE (typically summarization): recall-oriented overlap}
+\[
+\text{ROUGE-1 (recall)} = \frac{\sum_{g \in \text{1-grams}} \min\big(c(g,y),c(g,y^\star)\big)}{\sum_{g \in \text{1-grams}} c(g,y^\star)}
+\]
+(ROUGE-L uses longest common subsequence.)
+
+\vspace{0.2em}
+\textbf{METEOR: alignment-based F-score + fragmentation penalty}
+\[
+P=\frac{m}{|y|},\quad R=\frac{m}{|y^\star|},\quad
+F_{\alpha}=\frac{PR}{\alpha P+(1-\alpha)R},\quad
+\text{METEOR}=F_{\alpha}\cdot(1-\text{pen})
+\]
+where $m$ is the number of aligned unigrams (optionally with stemming/synonyms).
+
+\vspace{0.6em}
+\textbf{Toy numerical example (unigram-level):}\\
+Reference $y^\star$: \texttt{the cat is on the mat} (6 tokens)\\
+Model $y$: \texttt{cat is on mat} (4 tokens)
+
+\begin{itemize}
+  \item Unigram overlap $m=4$ (\texttt{cat,is,on,mat}).
+  \item BLEU-1: $p_1=4/4=1.0$, BP $=\exp(1-6/4)=e^{-0.5}\approx 0.607$ $\Rightarrow$ BLEU-1 $\approx 0.607$.
+  \item ROUGE-1 recall: $m/|y^\star|=4/6\approx 0.667$.
+  \item METEOR (illustrative): $P=1.0$, $R=0.667$; with $\alpha=0.9$, $F_{\alpha}\approx 0.690$; if $\text{pen}=0.05$, METEOR $\approx 0.656$.
+\end{itemize}
+
+\vspace{0.3em}
+\footnotesize
+\textbf{Caveat:} all three are \emph{reference-based}; they reward surface overlap and may miss factuality/logic.
+\end{frame}
+
+%===========================================================
+% Slide: Literature slide
+%===========================================================
+\begin{frame}{Key Literature: Automatic Evaluation of Text Generation}
+\small
+
+\begin{itemize}
+  \item \textbf{BLEU} (Papineni et al., 2002): n-gram precision + brevity penalty for MT.
+  \item \textbf{ROUGE} (Lin, 2004): recall-oriented overlap metrics for summarization.
+  \item \textbf{METEOR} (Banerjee \& Lavie, 2005): alignment-based scoring with stemming/synonyms.
+  \item \textbf{BERTScore} (Zhang et al., 2019): contextual-embedding token alignment (semantic similarity beyond n-grams).
+\end{itemize}
+
+\vspace{0.6em}
+\footnotesize
+\textbf{References:}
+\begin{itemize}
+  \item Papineni, K., Roukos, S., Ward, T., \& Zhu, W. J. (2002). \emph{BLEU}. ACL.
+  \item Lin, C.-Y. (2004). \emph{ROUGE}. ACL Workshop.
+  \item Banerjee, S., \& Lavie, A. (2005). \emph{METEOR}. ACL Workshop.
+  \item Zhang, T., Kishore, V., Wu, F., Weinberger, K. Q., \& Artzi, Y. (2019). \emph{BERTScore}. arXiv.
+\end{itemize}
+\end{frame}
+
 % ---------------- Slide: Offline Workflow ----------------
 % \begin{frame}{Offline Evaluation Workflow}
 
