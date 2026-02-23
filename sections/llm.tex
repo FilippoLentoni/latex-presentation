@@ -147,7 +147,7 @@ Use abstention when the \textbf{cost of a wrong answer} exceeds the \textbf{cost
 \end{frame}
 
 % ---------------- Slide: LLM Evaluation Toolkit ----------------
-\begin{frame}{LLM Evaluation Metrics}
+
 
 % \begin{enumerate}
 %   \item \textbf{Rubric-based Human Evaluation}
@@ -175,60 +175,151 @@ Use abstention when the \textbf{cost of a wrong answer} exceeds the \textbf{cost
 % \begin{block}{Key Principle}
 % Match evaluation method to \textbf{task risk} and \textbf{output structure}.
 % \end{block}
-\end{frame}
+% \end{frame}
 
 %===========================================================
 % Slide: Classical text-based metrics (with formulas + example)
 %===========================================================
-\begin{frame}{Reference-Based Text Metrics (BLEU, ROUGE, METEOR)}
-\small
+% \begin{frame}{LLM Evaluation Metrics}
+% \small
 
-\textbf{Setup:} compare model output $y$ to reference (gold) $y^\star$.
+% \textbf{Setup:} compare model output $y$ to reference (gold) $y^\star$.
 
-\vspace{0.4em}
-\textbf{BLEU (typically MT): n-gram precision + brevity penalty}
-\[
-\text{BLEU} = \text{BP} \cdot \exp\!\Big(\sum_{n=1}^{N} w_n \log p_n\Big),\qquad
-\text{BP}=
-\begin{cases}
-1 & |y| \ge |y^\star|\\
-\exp(1-|y^\star|/|y|) & |y|<|y^\star|
-\end{cases}
-\]
-where $p_n$ = clipped $n$-gram precision.
+% \vspace{0.4em}
+% \textbf{BLEU (typically MT): n-gram precision + brevity penalty}
+% \[
+% \text{BLEU} = \text{BP} \cdot \exp\!\Big(\sum_{n=1}^{N} w_n \log p_n\Big),\qquad
+% \text{BP}=
+% \begin{cases}
+% 1 & |y| \ge |y^\star|\\
+% \exp(1-|y^\star|/|y|) & |y|<|y^\star|
+% \end{cases}
+% \]
+% where $p_n$ = clipped $n$-gram precision.
 
-\vspace{0.2em}
-\textbf{ROUGE (typically summarization): recall-oriented overlap}
-\[
-\text{ROUGE-1 (recall)} = \frac{\sum_{g \in \text{1-grams}} \min\big(c(g,y),c(g,y^\star)\big)}{\sum_{g \in \text{1-grams}} c(g,y^\star)}
-\]
-(ROUGE-L uses longest common subsequence.)
+% \vspace{0.2em}
+% \textbf{ROUGE (typically summarization): recall-oriented overlap}
+% \[
+% \text{ROUGE-1 (recall)} = \frac{\sum_{g \in \text{1-grams}} \min\big(c(g,y),c(g,y^\star)\big)}{\sum_{g \in \text{1-grams}} c(g,y^\star)}
+% \]
+% (ROUGE-L uses longest common subsequence.)
 
-\vspace{0.2em}
-\textbf{METEOR: alignment-based F-score + fragmentation penalty}
-\[
-P=\frac{m}{|y|},\quad R=\frac{m}{|y^\star|},\quad
-F_{\alpha}=\frac{PR}{\alpha P+(1-\alpha)R},\quad
-\text{METEOR}=F_{\alpha}\cdot(1-\text{pen})
-\]
-where $m$ is the number of aligned unigrams (optionally with stemming/synonyms).
+% \vspace{0.2em}
+% \textbf{METEOR: alignment-based F-score + fragmentation penalty}
+% \[
+% P=\frac{m}{|y|},\quad R=\frac{m}{|y^\star|},\quad
+% F_{\alpha}=\frac{PR}{\alpha P+(1-\alpha)R},\quad
+% \text{METEOR}=F_{\alpha}\cdot(1-\text{pen})
+% \]
+% where $m$ is the number of aligned unigrams (optionally with stemming/synonyms).
 
-\vspace{0.6em}
-\textbf{Toy numerical example (unigram-level):}\\
-Reference $y^\star$: \texttt{the cat is on the mat} (6 tokens)\\
-Model $y$: \texttt{cat is on mat} (4 tokens)
+% \vspace{0.6em}
+% \textbf{Toy numerical example (unigram-level):}\\
+% Reference $y^\star$: \texttt{the cat is on the mat} (6 tokens)\\
+% Model $y$: \texttt{cat is on mat} (4 tokens)
+
+% \begin{itemize}
+%   \item Unigram overlap $m=4$ (\texttt{cat,is,on,mat}).
+%   \item BLEU-1: $p_1=4/4=1.0$, BP $=\exp(1-6/4)=e^{-0.5}\approx 0.607$ $\Rightarrow$ BLEU-1 $\approx 0.607$.
+%   \item ROUGE-1 recall: $m/|y^\star|=4/6\approx 0.667$.
+%   \item METEOR (illustrative): $P=1.0$, $R=0.667$; with $\alpha=0.9$, $F_{\alpha}\approx 0.690$; if $\text{pen}=0.05$, METEOR $\approx 0.656$.
+% \end{itemize}
+
+% \vspace{0.3em}
+% \footnotesize
+% \textbf{Caveat:} all three are \emph{reference-based}; they reward surface overlap and may miss factuality/logic.
+% \end{frame}
+
+
+
+% ---------------- Slide: Overview ----------------
+\begin{frame}{Classic automatic metrics (text generation)}
+\begin{itemize}
+  \item \textbf{BLEU}: precision-oriented n-gram overlap (common in translation).
+  \item \textbf{ROUGE}: recall-oriented overlap (common in summarization).
+  \item \textbf{METEOR}: adds synonymy + ordering sensitivity; balances precision/recall.
+  \item \textbf{BERTScore}: semantic similarity using contextual embeddings (handles paraphrase).
+\end{itemize}
+\end{frame}
+
+% ---------------- Slide: BLEU Example 1 ----------------
+\begin{frame}{BLEU (example)}
+\begin{block}{Expected}
+\textcolor{red}{The golden dart frog} is \textcolor{red}{the most poisonous animal on the planet}.
+\end{block}
+
+\begin{block}{LLM output}
+\textcolor{red}{The most poisonous animal on the planet} is the golden poison frog, also known as \textcolor{red}{the golden dart frog} or golden poison arrow frog.
+\end{block}
 
 \begin{itemize}
-  \item Unigram overlap $m=4$ (\texttt{cat,is,on,mat}).
-  \item BLEU-1: $p_1=4/4=1.0$, BP $=\exp(1-6/4)=e^{-0.5}\approx 0.607$ $\Rightarrow$ BLEU-1 $\approx 0.607$.
-  \item ROUGE-1 recall: $m/|y^\star|=4/6\approx 0.667$.
-  \item METEOR (illustrative): $P=1.0$, $R=0.667$; with $\alpha=0.9$, $F_{\alpha}\approx 0.690$; if $\text{pen}=0.05$, METEOR $\approx 0.656$.
+  \item BLEU tends to reward \textbf{exact phrase overlap} (n-grams).
+  \item Extra correct details may not help much if phrasing diverges.
 \end{itemize}
-
-\vspace{0.3em}
-\footnotesize
-\textbf{Caveat:} all three are \emph{reference-based}; they reward surface overlap and may miss factuality/logic.
 \end{frame}
+
+
+
+% ---------------- Slide: ROUGE Example ----------------
+% \begin{frame}{ROUGE (example)}
+% \begin{block}{Expected}
+% The golden dart frog is the most poisonous animal on the planet.
+% \end{block}
+
+% \begin{block}{LLM output}
+% The golden dart frog is the most poisonous animal on the planet.
+% \end{block}
+
+% \begin{itemize}
+%   \item ROUGE is widely used for summarization because it emphasizes \textbf{coverage}.
+%   \item Intuition: ``Did the model include the key reference content?''
+% \end{itemize}
+% \end{frame}
+
+% ---------------- Slide: METEOR Example ----------------
+% \begin{frame}{METEOR (example)}
+% \begin{block}{Expected}
+% The golden dart frog is the most poisonous animal on the planet.
+% \end{block}
+
+% \begin{block}{LLM output}
+% The golden dart frog is the most poisonous animal in the world.
+% \end{block}
+
+% \begin{itemize}
+%   \item METEOR is more forgiving about \textbf{word variants / synonyms}.
+%   \item It also considers \textbf{word order differences} (penalizes major re-orderings).
+%   \item Useful when you want overlap, but with \textbf{linguistic flexibility}.
+% \end{itemize}
+% \end{frame}
+
+% ---------------- Slide: BERTScore Example ----------------
+\begin{frame}{BERTScore (example)}
+\begin{block}{Expected}
+The \textcolor{red}{golden dart frog} is the \textcolor{red}{most poisonous animal on the planet}.
+\end{block}
+
+\begin{block}{LLM output}
+The golden dart frog is one of the \textcolor{red}{most dangerous animals on the planet} due to its \textcolor{red}{high toxicity}.
+\end{block}
+
+\begin{itemize}
+  \item Captures \textbf{semantic similarity} even when wording changes.
+  \item Recognizes paraphrases (e.g., \emph{poisonous} $\leftrightarrow$ \emph{high toxicity}).
+  \item Often closer to human judgment for meaning, but can still miss factual errors.
+\end{itemize}
+\end{frame}
+
+% % ---------------- Slide: Key takeaway ----------------
+% \begin{frame}{Takeaway: what these metrics miss}
+% \begin{itemize}
+%   \item They are \textbf{cheap and scalable}, but can be misaligned with real goals.
+%   \item Overlap metrics can reward \textbf{copying} more than \textbf{correct reasoning}.
+%   \item Embedding metrics capture meaning, but do not guarantee \textbf{factuality}.
+%   \item For production: pair with \textbf{task success}, \textbf{human rubrics}, and \textbf{trace-based evaluation}.
+% \end{itemize}
+% \end{frame}
+
 
 %===========================================================
 % Slide: Literature slide
@@ -244,14 +335,6 @@ Model $y$: \texttt{cat is on mat} (4 tokens)
 \end{itemize}
 
 \vspace{0.6em}
-\footnotesize
-\textbf{References:}
-\begin{itemize}
-  \item Papineni, K., Roukos, S., Ward, T., \& Zhu, W. J. (2002). \emph{BLEU}. ACL.
-  \item Lin, C.-Y. (2004). \emph{ROUGE}. ACL Workshop.
-  \item Banerjee, S., \& Lavie, A. (2005). \emph{METEOR}. ACL Workshop.
-  \item Zhang, T., Kishore, V., Wu, F., Weinberger, K. Q., \& Artzi, Y. (2019). \emph{BERTScore}. arXiv.
-\end{itemize}
 \end{frame}
 
 % ---------------- Slide: Offline Workflow ----------------
@@ -354,14 +437,6 @@ When LLMs perform \textbf{structured tasks} (classification, extraction), use st
 \end{itemize}
 \end{column}
 \end{columns}
-
-\vspace{0.5em}
-\begin{block}{The Coverage-Accuracy Trade-off}
-$$
-\text{Coverage} = \frac{\text{Cases Classified}}{\text{Total Cases}}
-$$
-With abstention: lower coverage $\leftrightarrow$ higher precision on classified cases.
-\end{block}
 \end{frame}
 
 % ---------------- Slide: UAT Design ----------------
@@ -465,26 +540,26 @@ Black-box models require post-hoc explanations (SHAP, LIME). LLMs can explain na
 % Labeled production errors should feed back into the offline evaluation dataset.
 % \end{frame}
 
-% ---------------- Slide: Self-Service Platforms ----------------
-\begin{frame}{Self-Service Experimentation Platforms}
+% % ---------------- Slide: Self-Service Platforms ----------------
+% \begin{frame}{Self-Service Experimentation Platforms}
 
-\textbf{Goal:} Enable domain experts to iterate on prompts without ML engineering support.
+% \textbf{Goal:} Enable domain experts to iterate on prompts without ML engineering support.
 
-\begin{block}{Key Platform Capabilities}
-\begin{enumerate}
-  \item \textbf{Quick Test Mode}: Test prompts on individual examples instantly
-  \item \textbf{Batch Evaluation}: Run prompts against full evaluation sets
-  \item \textbf{Experiment Tracking}: Version prompts, record metrics per iteration
-  \item \textbf{Multi-Model Support}: Compare Claude, GPT, Llama, etc.
-  \item \textbf{Human-in-the-Loop}: UI for SME review and labeling
-  \item \textbf{Copilot Mode}: AI-assisted prompt refinement suggestions
-\end{enumerate}
-\end{block}
+% \begin{block}{Key Platform Capabilities}
+% \begin{enumerate}
+%   \item \textbf{Quick Test Mode}: Test prompts on individual examples instantly
+%   \item \textbf{Batch Evaluation}: Run prompts against full evaluation sets
+%   \item \textbf{Experiment Tracking}: Version prompts, record metrics per iteration
+%   \item \textbf{Multi-Model Support}: Compare Claude, GPT, Llama, etc.
+%   \item \textbf{Human-in-the-Loop}: UI for SME review and labeling
+%   \item \textbf{Copilot Mode}: AI-assisted prompt refinement suggestions
+% \end{enumerate}
+% \end{block}
 
-\begin{block}{Impact}
-Self-service platforms can reduce ML engineer involvement by 50-75\% for prompt-based applications.
-\end{block}
-\end{frame}
+% \begin{block}{Impact}
+% Self-service platforms can reduce ML engineer involvement by 50-75\% for prompt-based applications.
+% \end{block}
+% \end{frame}
 
 % ---------------- Slide: LLM Summary ----------------
 % \begin{frame}{LLM Evaluation: Key Takeaways}

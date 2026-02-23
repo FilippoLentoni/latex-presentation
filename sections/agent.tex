@@ -733,30 +733,7 @@ Corrective actions: ...''
 \end{block}
 \end{frame}
 
-% ---------------- Slide: Summary ----------------
-\begin{frame}{Agent Evaluation: Key Takeaways}
 
-\begin{enumerate}
-  \item \textbf{Agents are complex systems} with more failure modes than single LLM calls
-  
-  \item \textbf{Multi-dimensional metrics}: Adoption, Coverage, Latency, Accuracy, Cost
-  
-  \item \textbf{Accuracy Bridge}: Standardized failure taxonomy enables actionable insights
-  \begin{itemize}
-    \item Failure Type $\rightarrow$ Root Cause $\rightarrow$ Targeted Fix
-  \end{itemize}
-  
-  \item \textbf{Offline + Online}: Both required for comprehensive evaluation
-  
-  \item \textbf{LLM-as-a-Judge}: Scales evaluation but must be calibrated; humans remain source of truth
-  
-  \item \textbf{Close the loop}: Production failures $\rightarrow$ evaluation dataset $\rightarrow$ better agents
-  
-  \item \textbf{Observability is foundational}: Can't improve what you can't trace
-  
-  \item \textbf{Versioning}: Agent configs, datasets, and results
-\end{enumerate}
-\end{frame}
 
 % % ---------------- Slide: Comparison ----------------
 % \begin{frame}{LLM vs. Agent Evaluation: Summary Comparison}
@@ -783,7 +760,7 @@ Corrective actions: ...''
 % \end{frame}
 
 %===========================================================
-% Slide: MMLU (Real Sample)
+% Slide: MMLU
 %===========================================================
 \begin{frame}{Global Benchmark: MMLU (Knowledge \& Reasoning)}
 \small
@@ -793,28 +770,25 @@ Corrective actions: ...''
 Metric: \textbf{Accuracy} (correct option vs. ground truth).
 
 \vspace{0.6em}
-\textbf{Real Sample Question (Abstract Algebra):}
+\textbf{Sample Question:}
 
 \begin{quote}
-$(\mathbb{Z}, *)$ is a group with $a * b = a + b + 1$ for all $a,b \in \mathbb{Z}$.\\
-What is the inverse of $a$?
+Would a reservation to the definition of torture in the International Covenant on Civil
+and Political Rights (ICCPR) be acceptable in contemporary practice?
 \begin{itemize}
-  \item A) $0$
-  \item B) $-2$
-  \item C) $a - 2$
-  \item D) $(2 + a) * -1$
+  \item A) Acceptable if the reserving country's legislation employs a different definition.
+  \item B) Unacceptable because it contravenes the object and purpose of the ICCPR.
+  \item C) Unacceptable because the definition of torture in the ICCPR is consistent with customary international law.
+  \item D) Acceptable because under general international law States have the right to enter reservations to treaties.
 \end{itemize}
 \end{quote}
 
-\textbf{Correct answer: C} (as provided in benchmark sample).
+\textbf{Correct answer: B} (as provided in benchmark sample).
 
-\vspace{0.4em}
-\footnotesize
-\textbf{Source:} Hendrycks et al., 2021 (MMLU); publicly hosted example.
 \end{frame}
 
 %===========================================================
-% Slide: SWE-bench (Real Dataset Sample)
+% Slide: SWE-bench
 %===========================================================
 \begin{frame}{Global Benchmark: SWE-bench (Execution-Based Coding)}
 \small
@@ -823,30 +797,10 @@ What is the inverse of $a$?
 Task: generate a patch that makes failing tests pass.\\
 Metric: \textbf{Execution success rate} (tests pass after patch).
 
-\vspace{0.6em}
-\textbf{Real Instance Structure (Dataset Example):}
-
-\begin{itemize}
-  \item \texttt{"instance\_id": "sympy\_\_sympy-11400"}
-  \item \texttt{"repo": "sympy/sympy"}
-  \item \texttt{"problem\_statement": "ccode(sinc(x)) doesn't work"}
-  \item \texttt{"patch": Gold solution patch from PR}
-\end{itemize}
-
-Evaluation:
-\begin{itemize}
-  \item Apply model-generated patch
-  \item Run repository test suite
-  \item Success = failing tests move from \textit{fail-to-pass}
-\end{itemize}
-
-\vspace{0.4em}
-\footnotesize
-\textbf{Source:} Jimenez et al., 2024 (SWE-bench); official dataset documentation.
 \end{frame}
 
 %===========================================================
-% Slide: τ-bench (Real Interactive Benchmark)
+% Slide: τ-bench
 %===========================================================
 \begin{frame}{Global Benchmark: $\tau$-bench (Interactive Agent Evaluation)}
 \small
@@ -880,6 +834,33 @@ Metric:
 \footnotesize
 \textbf{Source:} Yao et al., 2024 ($\tau$-bench); official benchmark documentation.
 \end{frame}
+
+
+% ---------------- Slide: Summary ----------------
+\begin{frame}{Agent Evaluation: Key Takeaways}
+
+\begin{enumerate}
+  \item \textbf{Agents are complex systems} with more failure modes than single LLM calls
+  
+  \item \textbf{Multi-dimensional metrics}: Adoption, Coverage, Latency, Accuracy, Cost
+  
+  \item \textbf{Accuracy Bridge}: Standardized failure taxonomy enables actionable insights
+  \begin{itemize}
+    \item Failure Type $\rightarrow$ Root Cause $\rightarrow$ Targeted Fix
+  \end{itemize}
+  
+  \item \textbf{Offline + Online}: Both required for comprehensive evaluation
+  
+  \item \textbf{LLM-as-a-Judge}: Scales evaluation but must be calibrated; humans remain source of truth
+  
+  \item \textbf{Close the loop}: Production failures $\rightarrow$ evaluation dataset $\rightarrow$ better agents
+  
+  \item \textbf{Observability is foundational}: Can't improve what you can't trace
+  
+  \item \textbf{Versioning}: Agent configs, datasets, and results
+\end{enumerate}
+\end{frame}
+
 
 % ---------------- Slide: Questions ----------------
 \begin{frame}{Questions?}
